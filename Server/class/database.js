@@ -10,8 +10,7 @@ const User = mongoose.model('User', require(__dirname + '/user'));
 const Log = mongoose.model('Log', {logString: String});
 class database {
     //Method to get a user by the username
-    static getUser(username){
-        let user;
+    static getUser(username, callback){
         //find the user by the username
         User.findOne({username: username}, (err,doc) => {
             //if an error occurs, log in to the datbase
@@ -20,9 +19,8 @@ class database {
                 return;
             }
             //Return the document
-            user = doc;
+            callback(doc);
         });
-        return user;
     }
     static updateUser(username){
 
