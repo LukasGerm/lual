@@ -8,7 +8,7 @@
         <div class="container">
 
           <div class="z-depth-2 white" id="mainwindow">
-            <form class="col s12" action="/auth" method="post">
+            <form class="col s12" action="" method="post" id="loginForm">
               <div class="row">
                 <h4>Login</h4>
                 <!-- Here must be the error message if the login has failed -->
@@ -16,13 +16,13 @@
 
                 </div>
                 <div class="input-field col s12">
-                  <input type="text" name="username" id="username" class="validate">
+                  <input type="text" name="username" id="username" class="validate" required>
                   <label for="username">Username</label>
                 </div>
               </div>
               <div class="row">
                 <div class="input-field col s12">
-                  <input type="password" name="password" id="password" class="validate">
+                  <input type="password" name="password" id="password" class="validate" required>
                   <label for="password">Password</label>
                 </div>
               </div>
