@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/lual');
+mongoose.connect('mongodb://localhost:27017/lual', {
+    useNewUrlParser: true
+});
 const User = mongoose.model('User', require(__dirname + '/user'));
 const Log = mongoose.model('Log', {logString: String});
 class database {
