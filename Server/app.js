@@ -7,6 +7,7 @@ const indexRouter = require('./routes/index');
 const database = require(__dirname + '/class/database');
 const session = require('express-session');
 const admin = require('./routes/admin');
+const sha512 = require('js-sha512');
 const app = express();
 app.use(session({
   secret: 'gqgrwhubvaoj09pgbqwuigh903ghiu0q34vqas293hndva',
@@ -17,8 +18,9 @@ app.use(session({
   saveUninitialized: true
 }));
 const checkLogin = (req,res,next) => {
-  //Here comes the authentication function to check, if the user is loggedin
-  next();
+  //if the client is loggedin, go to the next middleware
+  if(req.session.login) return next();
+  else res.sendStatus(401);
 }
 
 // view engine setup

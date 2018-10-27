@@ -11,7 +11,18 @@ const Log = mongoose.model('Log', {logString: String});
 class database {
     //Method to get a user by the username
     static getUser(username){
-        User.findOne()
+        let user;
+        //find the user by the username
+        User.findOne({username: username}, (err,doc) => {
+            //if an error occurs, log in to the datbase
+            if(err){
+                this.insertLog('Database finderror');
+                return;
+            }
+            //Return the document
+            user = doc;
+        });
+        return user;
     }
     static updateUser(username){
 
