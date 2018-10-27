@@ -1,11 +1,43 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
+  <%- include imports/head %>
+  <link rel="stylesheet" href="stylesheets/style.css">
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <main>
+      <div class="background-img"></div>
+        <div class="container">
+
+          <div class="z-depth-2 white" id="mainwindow">
+            <form class="col s12" action="/auth" method="post">
+              <div class="row">
+                <h4>Login</h4>
+                <!-- Here must be the error message if the login has failed -->
+                <div id="errormsg">
+
+                </div>
+                <div class="input-field col s12">
+                  <input type="text" name="username" id="username" class="validate">
+                  <label for="username">Username</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input type="password" name="password" id="password" class="validate">
+                  <label for="password">Password</label>
+                </div>
+              </div>
+              <div class="row">
+                <button class="left btn waves-effect waves-light indigo darken-2" type="submit" name="send">Login
+                  <i class="material-icons right">send</i>
+                </button>
+              </div>
+            </form>
+          </div>
+          <p class="white-text">Powered by <a href="https://precode.eu">precode.eu</a> | &copy; by <a href="https://precode.eu">precode.eu</a></p>
+          <p class="white-text">Version</p>
+        </div>
+</main>
+
+    <%- include imports/imports %>
   </body>
 </html>
