@@ -6,3 +6,5 @@ const router = express.Router();
 router.get('/', (req,res,next) => {
     res.send("Success");
 });
+
+module.exports = router;
