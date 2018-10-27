@@ -15,7 +15,8 @@ $('#loginForm').submit(e => {
             window.location.href = '/a';
         },
         error(){
-            //Error function goes here
+            //Change the innerhtml of the error div
+            $('#errormsg').html('Username or Password wrong');
         }
     });
 })

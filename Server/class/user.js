@@ -5,7 +5,8 @@ let user = {
     lastName: String,
     roomNumber: String,
     group: Number,
-    isAdmin: Boolean
+    isAdmin: Boolean,
+    firstLogin: Boolean
 }
 
 module.exports = user;
