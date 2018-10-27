@@ -4,10 +4,9 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const indexRouter = require('./routes/index');
-const database = require(__dirname + '/class/database');
+const adminRouter = require('./routes/admin');
+const apiRouter = require('./routes/api');
 const session = require('express-session');
-const admin = require('./routes/admin');
-const sha512 = require('js-sha512');
 const app = express();
 app.use(session({
   secret: 'gqgrwhubvaoj09pgbqwuigh903ghiu0q34vqas293hndva',
@@ -35,7 +34,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 //Loginrouter
 app.use('/', indexRouter);
 //Admininterfacerouter
-app.use('/a', checkLogin,admin)
+app.use('/a', checkLogin,adminRouter);
+//Api calls
+app.use('/api', checkLogin, apiRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
