@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
 router.post('/auth', (req,res,next) => {
   //get the user from the database
   let typedPassword = sha512(req.body.password);
-  let user = database.getUser(req.body.username, (user) => {
+  database.getUser(req.body.username, (user) => {
       //Check if the user exists or if its admin
       if(!user || !user.isAdmin){
         return res.sendStatus(401);
