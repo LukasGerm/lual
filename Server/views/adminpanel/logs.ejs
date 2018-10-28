@@ -1,15 +1,40 @@
 <!DOCTYPE html>
 <html>
     <%- include ../imports/head %>
-
+    <link rel="stylesheet" href="/stylesheets/adminstyle.css">
     <body>
         
         <%- include ../imports/sidenav %>
-        <div class="container">
+        <div class="loader">
+                <div class="preloader-wrapper big active">
+                        <div class="spinner-layer spinner-blue-only">
+                          <div class="circle-clipper left">
+                            <div class="circle"></div>
+                          </div><div class="gap-patch">
+                            <div class="circle"></div>
+                          </div><div class="circle-clipper right">
+                            <div class="circle"></div>
+                          </div>
+                        </div>
+                </div>
+        </div>
 
+        <div class="container">
+            <h3>Activity protocol</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody id="logs">
+
+                </tbody>
+            </table>
         </div>        
         <%- include ../imports/imports %>
-        <script type="text/javascript" src="js/admin.js"></script>
+        <script type="text/javascript" src="/js/logs.js"></script>
     </body>
 
 </html>

@@ -7,7 +7,7 @@ mongoose.connect('mongodb://localhost:27017/lual', {
 //Userschema
 const User = mongoose.model('User', require(__dirname + '/user'));
 //Logschema
-const Log = mongoose.model('Log', {logString: String});
+const Log = mongoose.model('Log', {logString: String, date: String});
 //Groupschema
 const Group = mongoose.model('Group', require(__dirname + '/group'));
 class database {
@@ -44,10 +44,11 @@ class database {
         });
     }
     //Create a new log in the log collection
-    static insertLog(logString){
-        let _log = new Log({ logString: logString });
+    static insertLog(logString, callback){
+        let _log = new Log({ logString: logString, date: new Date().toLocaleString() });
         _log.save(err => {
             if (err) callback(err);
+            else callback();
         });
     }
     //Creates a new Group in the Database
@@ -64,6 +65,13 @@ class database {
     //Used to get all the groups
     static getGroups(ids){
         //code goes here
+    }
+    //Get the logs
+    static getLogs(callback){
+        Log.find((err,doc) => {
+            //Send it to the callback
+            callback(JSON.stringify(doc));
+        })
     }
 }
 
