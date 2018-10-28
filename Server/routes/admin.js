@@ -4,7 +4,14 @@ const router = express.Router();
 
 //Router for the Admininterface /a
 router.get('/', (req,res,next) => {
-    res.send("Success");
+    res.render('adminpanel/user');
 });
-
+//Using the same rendering, cause on the firstpage, you should review the users
+router.get('/user', (req,res,next) => {
+    res.render('adminpanel/user');
+});
+//Router for viewing the logs
+router.get('/logs', (req,res,next) => {
+    res.render('adminpanel/logs')
+})
 module.exports = router;

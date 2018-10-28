@@ -19,7 +19,7 @@ app.use(session({
 const checkLogin = (req,res,next) => {
   //if the client is loggedin, go to the next middleware
   if(req.session.login) return next();
-  else res.sendStatus(401);
+  else res.redirect('/');
 }
 
 // view engine setup

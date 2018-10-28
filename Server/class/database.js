@@ -47,14 +47,14 @@ class database {
     static insertLog(logString){
         let _log = new Log({ logString: logString });
         _log.save(err => {
-            if (err) console.log(err);
+            if (err) callback(err);
         });
     }
     //Creates a new Group in the Database
     static insertGroup(group, callback){
         let _group = new Group(group);
         _group.save(err =>{
-            if (err) console.log(err);
+            if (err) callback(err);
             else {
                 this.insertLog("Group: "+ group.name + " with id: " + group.id + " successfuly created");
                 callback();
