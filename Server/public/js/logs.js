@@ -1,13 +1,15 @@
 //Function for getting the logs from the server
 //The filter argument is optional
 //It is for the datepicker closing
-function getLogs(filter){
-    $.get('/api/getlogs', (data,status) => {
+function getLogs(filter, page){
+    // if not set, use page 0
+    page = !page ? 0 : page;
+    $.get(`/api/getlogs?page=${page}&pageSize=2`, (data,status) => {
         $('.preloader-background').fadeIn('fast');
         $('.loader').fadeIn('fast');
         //Clear the div first
         document.getElementById('logs').innerHTML = '';
-        let logs = JSON.parse(data);
+        let logs = !data ? [] : JSON.parse(data);
         logs.forEach(element => {
             //create the log elements
             if (filter){
@@ -25,6 +27,13 @@ function getLogs(filter){
         $('.loader').fadeOut('fast');
     });   
 }
+function getLogsCount(){
+    $.get('/api/getlogscount', (data,status) => {
+        const count = data.count;
+        // TODO: Create pagination buttons
+        console.log(`${count} items of type Log exist in database`);
+    });   
+}
 //Function when the document is ready
 document.addEventListener('DOMContentLoaded', function() {
     let sidenav = M.Sidenav.init(document.querySelectorAll('.sidenav'));
@@ -37,4 +46,5 @@ document.addEventListener('DOMContentLoaded', function() {
          }
         });
     getLogs();
+    getLogsCount();
   });
