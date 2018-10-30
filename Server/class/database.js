@@ -17,7 +17,7 @@ class database {
         User.findOne({username: username}, (err,doc) => {
             //if an error occurs, log in to the datbase
             if(err){
-                this.insertLog('Database finderror');
+                this.insertLog('Database finderror', () => {});
                 return;
             }
             //Return the document
@@ -38,7 +38,7 @@ class database {
             if (err) console.log(err);
             //if its successful, log in the log collection
             else {
-                this.insertLog("User " + user.username + " successfuly created!");
+                this.insertLog("User " + user.username + " successfuly created!", () => {});
                 callback();
             };
         });
@@ -57,7 +57,7 @@ class database {
         _group.save(err =>{
             if (err) callback(err);
             else {
-                this.insertLog("Group: "+ group.name + " with id: " + group.id + " successfuly created");
+                this.insertLog("Group: "+ group.name + " with id: " + group.id + " successfuly created", () => {});
                 callback();
             }
         });
@@ -67,11 +67,28 @@ class database {
         //code goes here
     }
     //Get the logs
-    static getLogs(callback){
-        Log.find((err,doc) => {
-            //Send it to the callback
+    static getLogs(page, pageSize, callback){
+        // set the default pageSize if there is no or invalid pageSize
+        if (!pageSize || pageSize < 1) {
+            pageSize = 10;
+        }
+        // If no page is set as GET parameter, we set the page to 0 per default
+        page = !page ? 0 : (page - 1);
+        // Calculate the number of entries to skip (simulate pagination)
+        const pageSkip = page * pageSize;
+        let mongoFind = Log.find();
+        if (pageSkip > 0) {
+            mongoFind = mongoFind.skip(pageSkip);
+        }
+        mongoFind.limit(pageSize).exec((err, doc) => {
             callback(JSON.stringify(doc));
-        })
+        });
+    }
+    // Get count of logs
+    static getLogsCount(callback){
+        Log.find().count((err, count) => {
+            callback(count);
+        });
     }
 }
 
