@@ -10,7 +10,7 @@ router.get('/getlogs', (req,res,next) => {
 });
 //Router for getting the logs count, returning it as json
 router.get('/getlogscount', (req,res,next) => {
-    database.getLogsCount(count => res.send(count));
+    database.getLogsCount(count => res.send({count: count}));
 });
 
 module.exports = router;

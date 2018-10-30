@@ -69,11 +69,17 @@ class database {
     //Get the logs
     static getLogs(page, pageSize, callback){
         // set the default pageSize if there is no or invalid pageSize
-        if (!pageSize || pageSize < 1) {
+        if (!pageSize || isNaN(pageSize) || pageSize < 1) {
             pageSize = 10;
+        } else {
+            pageSize = Number.parseInt(pageSize);
         }
         // If no page is set as GET parameter, we set the page to 0 per default
-        page = !page ? 0 : (page - 1);
+        if (!page || isNaN(page) || page < 0) {
+            page = 0;
+        } else {
+            page = Number.parseInt(page);
+        }
         // Calculate the number of entries to skip (simulate pagination)
         const pageSkip = page * pageSize;
         let mongoFind = Log.find();
