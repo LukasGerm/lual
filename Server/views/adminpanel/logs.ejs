@@ -20,7 +20,18 @@
         </div>
 
         <div class="container">
-            <h3>Activity protocol</h3>
+            <h4>Activity protocol</h4>
+            <p>Here you can filter by date</p>
+            <div class="row">
+                <div class="input-field col s6">
+                    <input type="text" class="datepicker" id="datepick" >
+                    <label for="datepick">Pick a date</label>
+                </div>
+                <div class="input-field col s6">
+                    <button class="btn" onclick="getLogs()">Show all</button>
+                </div>
+            </div>
+
             <table>
                 <thead>
                     <tr>
