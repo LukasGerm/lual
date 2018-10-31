@@ -71,6 +71,7 @@ function getPageCount(logCount) {
 function showAllLogs(){
     logFilter = null;
     currentLogPage = 0;
+    $('#datepick').val('');
     getLogs();
 }
 //Function when the document is ready
