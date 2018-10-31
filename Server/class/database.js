@@ -63,7 +63,7 @@ class database {
         _group.save(err =>{
             if (err) callback(err);
             else {
-                this.insertLog("Group: "+ group.name + " with id: " + group.id + " successfuly created", () => {});
+                this.insertLog("Group: '"+ group.name + "' with id: " + group._id + " successfuly created", () => {});
                 callback();
             }
         });
