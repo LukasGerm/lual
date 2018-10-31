@@ -31,3 +31,16 @@ main {
 #errormsg{
     color: red;
 }
+
+@media only screen and (max-width : 480px) {
+    #mainwindow{
+        display: inline;
+        padding: 0;
+    }
+    .background-img{
+        display: none;
+    }
+    body{
+        overflow: hidden;
+    }
+}
