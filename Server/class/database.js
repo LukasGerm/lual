@@ -9,7 +9,7 @@ const User = mongoose.model('User', require(__dirname + '/user'));
 //Logschema
 const Log = mongoose.model('Log', {logString: String, date: String});
 //Groupschema
-const Group = mongoose.model('Group', require(__dirname + '/group'));
+const Group = mongoose.model('Group', {name: String});
 class database {
     //Method to get a user by the username
     static getUser(username, callback){

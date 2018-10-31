@@ -11,7 +11,7 @@ function getUser(){
       htmlToAdd += '<ul class="collection with-header"> <li class="collection-header"><div><b>'+group.name+'</b><a href="#" class="secondary-content"><i class="material-icons">add</i></a></div></li>';
       console.log("Created <ul>");
       for(let i = 0; i < users.users.length; i++){
-        if(group.id === users.users[i].group){
+        if(group._id === users.users[i].group){
           htmlToAdd += '<li class="collection-item"><div>'+users.users[i].firstName+' '+users.users[i].lastName+'<a href="#" class="secondary-content"><i class="material-icons">edit</i></a></div></li>';
           console.log("Created User <li>");
         }
