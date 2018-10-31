@@ -24,6 +24,12 @@ class database {
             callback(doc);
         });
     }
+    //Used to get all the users
+    static getAllUsers(callback){
+        User.find((err,docs) => {
+            callback(docs);
+        });
+    }
     static updateUser(username){
 
     }
@@ -63,8 +69,10 @@ class database {
         });
     }
     //Used to get all the groups
-    static getGroups(ids){
-        //code goes here
+    static getGroups(callback){
+        Group.find((err,docs) => {
+            callback(docs);
+        });
     }
     //Get the logs
     static getLogs(page, pageSize, callback){
