@@ -52,12 +52,12 @@ function rebuildPaginationButtons() {
     if (leftButtonDisabled) {
         paginationButtons += '<li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>';
     } else {
-        paginationButtons += '<li class="waves-effect"><a href="#!" (click)="setPage(' + (currentLogPage - 1) + ')><i class="material-icons">chevron_left</i></a></li>';
+        paginationButtons += '<li class="waves-effect"><a href="#!" (click)="setPage(' + (currentLogPage - 1) + ')"><i class="material-icons">chevron_left</i></a></li>';
     }
     if (rightButtonDisabled) {
         paginationButtons += '<li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>';
     } else {
-        paginationButtons += '<li class="waves-effect"><a href="#!" (click)="setPage(' + (currentLogPage + 1) + ')><i class="material-icons">chevron_right</i></a></li>';
+        paginationButtons += '<li class="waves-effect"><a href="#!" (click)="setPage(' + (currentLogPage + 1) + ')"><i class="material-icons">chevron_right</i></a></li>';
     }
     document.getElementById('pagination-container').innerHTML = paginationButtons;
 }
