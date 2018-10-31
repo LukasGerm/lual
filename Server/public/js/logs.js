@@ -68,6 +68,11 @@ function getPageCount(logCount) {
     const pageCount = logCount / logPageSize;
     return pageCount > 0 ? pageCount : 1;
 }
+function showAllLogs(){
+    logFilter = null;
+    currentLogPage = 0;
+    getLogs();
+}
 //Function when the document is ready
 document.addEventListener('DOMContentLoaded', function() {
     let sidenav = M.Sidenav.init(document.querySelectorAll('.sidenav'));
