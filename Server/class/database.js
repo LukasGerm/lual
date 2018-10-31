@@ -60,12 +60,19 @@ class database {
     //Creates a new Group in the Database
     static insertGroup(group, callback){
         let _group = new Group(group);
-        _group.save(err =>{
-            if (err) callback(err);
-            else {
-                this.insertLog("Group: '"+ group.name + "' with id: " + group._id + " successfuly created", () => {});
-                callback();
+        //check if there is a group
+        Group.findOne({name: group.name}, (err,doc) => {
+            if(doc){
+                callback("Error: Groupname is already taken");
+                return;
             }
+            _group.save(err =>{
+                if (err) callback(err);
+                else {
+                    this.insertLog("Group: '"+ group.name + "' with id: " + group._id + " successfuly created", () => {});
+                    callback();
+                }
+            });
         });
     }
     //Used to get all the groups

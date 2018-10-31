@@ -25,4 +25,18 @@ router.get('/getuser', (req,res,next) => {
         });
     });
 })
+
+//Router for creating groups
+router.get('/creategroup', (req,res,next) => {
+    //If the query is not set return the bad request status
+    if(!req.query.name){
+        return res.sendStatus(400);
+    }
+    database.insertGroup({name: req.query.name}, (error) => {
+        if(error){
+            return res.sendStatus(409);
+        }
+        res.sendStatus(200);
+    });
+});
 module.exports = router;
