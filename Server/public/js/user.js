@@ -8,7 +8,7 @@ function getUser(){
     users = JSON.parse(data);
     let htmlToAdd = "";
     users.groups.forEach(group => {
-      htmlToAdd += '<ul class="collection with-header"> <li class="collection-header"><div><h5>'+group.name+'</h5><a href="#" class="secondary-content"><i class="material-icons">add</i></a></div></li>';
+      htmlToAdd += '<ul class="collection with-header"> <li class="collection-header"><div><b>'+group.name+'</b><a href="#" class="secondary-content"><i class="material-icons">add</i></a></div></li>';
       console.log("Created <ul>");
       for(let i = 0; i < users.users.length; i++){
         if(group.id === users.users[i].group){
