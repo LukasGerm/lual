@@ -92,7 +92,7 @@ class database {
     }
     // Get count of logs
     static getLogsCount(callback){
-        Log.find().count((err, count) => {
+        Log.find().countDocuments((err, count) => {
             callback(count);
         });
     }
