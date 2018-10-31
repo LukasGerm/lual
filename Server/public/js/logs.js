@@ -46,18 +46,18 @@ function setPageCount(){
 function rebuildPaginationButtons() {
     // there is no previous page if we are on pageindex 0
     const leftButtonDisabled = currentLogPage < 1;
-    const rightButtonDisabled = currentLogPage === (logPageCount - 1);
+    const rightButtonDisabled = currentLogPage === Math.floor(logPageCount);
 
     let paginationButtons = '';
     if (leftButtonDisabled) {
-        paginationButtons += '<li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>';
+        paginationButtons += '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>';
     } else {
-        paginationButtons += '<li class="waves-effect"><a href="#!" onclick="setPage(' + (currentLogPage - 1) + ')"><i class="material-icons">chevron_left</i></a></li>';
+        paginationButtons += '<li class="waves-effect"><a onclick="setPage(' + (currentLogPage - 1) + ')"><i class="material-icons">chevron_left</i></a></li>';
     }
     if (rightButtonDisabled) {
-        paginationButtons += '<li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>';
+        paginationButtons += '<li class="disabled"><a><i class="material-icons">chevron_right</i></a></li>';
     } else {
-        paginationButtons += '<li class="waves-effect"><a href="#!" onclick="setPage(' + (currentLogPage + 1) + ')"><i class="material-icons">chevron_right</i></a></li>';
+        paginationButtons += '<li class="waves-effect"><a onclick="setPage(' + (currentLogPage + 1) + ')"><i class="material-icons">chevron_right</i></a></li>';
     }
     document.getElementById('pagination-container').innerHTML = paginationButtons;
 }
