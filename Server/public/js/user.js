@@ -39,9 +39,8 @@ function createGroup(){
   else{
     //if its okay, make a get request with the value
     $.get('/api/creategroup?name='+groupName.value, (data,status) => {
-      console.log(status);
       //If the status is ok, proceed
-      if(status == 'success'){
+      if(data == 'success'){
         M.toast({
           html: "Group successfuly created",
           classes: "green"

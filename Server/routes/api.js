@@ -30,13 +30,13 @@ router.get('/getuser', (req,res,next) => {
 router.get('/creategroup', (req,res,next) => {
     //If the query is not set return the bad request status
     if(!req.query.name){
-        return res.sendStatus(400);
+        return res.send(false);
     }
     database.insertGroup({name: req.query.name}, (error) => {
         if(error){
-            return res.sendStatus(409);
+            return res.send(false);
         }
-        res.sendStatus(200);
+        res.send('success');
     });
 });
 module.exports = router;
