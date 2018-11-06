@@ -7,50 +7,52 @@
     <body>
         
         <%- include ../imports/sidenav %>
-        <div class="loader">
-                <div class="preloader-wrapper big active">
-                        <div class="spinner-layer spinner-blue-only">
-                          <div class="circle-clipper left">
-                            <div class="circle"></div>
-                          </div><div class="gap-patch">
-                            <div class="circle"></div>
-                          </div><div class="circle-clipper right">
-                            <div class="circle"></div>
-                          </div>
-                        </div>
-                </div>
-        </div>
-
-        <div class="container">
-            <h4>Activity protocol</h4>
-            <p>Here you can filter by date</p>
-            <div class="row">
-                <div class="input-field col s6">
-                    <input type="text" class="datepicker" id="datepick" >
-                    <label for="datepick">Pick a date</label>
-                </div>
-                <div class="input-field col s6">
-                    <button class="btn" onclick="showAllLogs()">Show all</button>
-                </div>
+        <main>
+            <div class="loader">
+                    <div class="preloader-wrapper big active">
+                            <div class="spinner-layer spinner-blue-only">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div><div class="gap-patch">
+                                <div class="circle"></div>
+                            </div><div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                            </div>
+                    </div>
             </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Message</th>
-                    </tr>
-                </thead>
-                <tbody id="logs">
+            <div class="container">
+                <h4>Activity protocol</h4>
+                <p>Here you can filter by date</p>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input type="text" class="datepicker" id="datepick" >
+                        <label for="datepick">Pick a date</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <button class="btn" onclick="showAllLogs()">Show all</button>
+                    </div>
+                </div>
 
-                </tbody>
-            </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logs">
 
-            <ul id="pagination-container" class="pagination">
-                <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-            </ul>
-        </div>        
+                    </tbody>
+                </table>
+
+                <ul id="pagination-container" class="pagination">
+                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                </ul>
+            </div>    
+        </main>    
         <%- include ../imports/imports %>
         <script type="text/javascript" src="/js/logs.js"></script>
     </body>
