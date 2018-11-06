@@ -32,11 +32,11 @@ router.get('/creategroup', (req,res,next) => {
     if(!req.query.name){
         return res.send(false);
     }
-    database.insertGroup({name: req.query.name}, (error) => {
+    database.insertGroup({name: req.query.name}, (error, objectId) => {
         if(error){
             return res.send(false);
         }
-        res.send('success');
+        res.send(objectId);
     });
 });
 //Router to delete a group

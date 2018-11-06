@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
+
 //Connect to the database
 mongoose.connect('mongodb://localhost:27017/lual', {
     //Use the new url parser cause the old one is deprecated
@@ -66,11 +68,12 @@ class database {
                 callback("Error: Groupname is already taken");
                 return;
             }
-            _group.save(err =>{
+            _group.save((err, group) =>{
                 if (err) callback(err);
                 else {
                     this.insertLog("Group: '"+ group.name + "' with id: " + group._id + " successfuly created", () => {});
-                    callback();
+                    //callback the group objectid
+                    callback(false, group.id);
                 }
             });
         });
@@ -113,7 +116,17 @@ class database {
     }
     //Delete the group, has to check if the group is empty
     static deleteGroup(objectId, callback){
-
+        //String-Objectid converted to objectid-object
+        const convObjectId = ObjectId(objectId);
+        User.find({group: convObjectId}, (err,doc) => {
+            //If a doc is there, callback with the not empty error
+            if(doc == true) return callback("Group is not empty");
+            //Delete the group
+            Group.find({_id: convObjectId}).remove(() => {
+                //Callback to the function
+                callback();
+            });
+        });
     }
 }
 
