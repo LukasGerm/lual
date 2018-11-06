@@ -39,4 +39,13 @@ router.get('/creategroup', (req,res,next) => {
         res.send('success');
     });
 });
+//Router to delete a group
+router.get('/deletegroup', (req,res,next) => {
+    //Delete the group in the database and check if the group is empty
+    database.deleteGroup(req.query.id, (err) => {
+        if(err) return res.send(false);
+        //send succes and remove the div from the client and send a toast
+        res.send('success');
+    });
+});
 module.exports = router;

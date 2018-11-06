@@ -1,7 +1,10 @@
 let users = null;
 let createGroupModal = null;
 const userContainer = document.getElementById('users');
-
+//function to delete a group
+function deleteGroup(objectId){
+  console.log(objectId);
+}
 //Function to get the users from the server
 function getUser(){
   $.get('/api/getuser', (data, status) => {
@@ -10,7 +13,7 @@ function getUser(){
     users = JSON.parse(data);
     let htmlToAdd = "";
     users.groups.forEach(group => {
-      htmlToAdd += '<ul class="collection with-header"> <li class="collection-header"><div><b>'+group.name+'</b><a href="#" class="secondary-content"><i class="material-icons">add</i></a></div></li>';
+      htmlToAdd += `<ul class="collection with-header"> <li class="collection-header"><div><b>`+group.name+`</b><div onclick="deleteGroup('`+group._id+`')" class="secondary-content"><i class="material-icons">remove</i></div><div href="#" class="secondary-content"><i class="material-icons">add</i></div></div></li>`;
       for(let i = 0; i < users.users.length; i++){
         if(group._id === users.users[i].group){
           htmlToAdd += '<li class="collection-item"><div>'+users.users[i].firstName+' '+users.users[i].lastName+'<a href="#" class="secondary-content"><i class="material-icons">edit</i></a></div></li>';

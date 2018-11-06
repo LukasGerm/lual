@@ -111,6 +111,10 @@ class database {
             callback(count);
         });
     }
+    //Delete the group, has to check if the group is empty
+    static deleteGroup(objectId, callback){
+
+    }
 }
 
 module.exports = database;
