@@ -123,8 +123,10 @@ class database {
             if(doc == true) return callback("Group is not empty");
             //Delete the group
             Group.find({_id: convObjectId}).remove(() => {
+                this.insertLog("Group '" + objectId + "' deleted", () =>{
                 //Callback to the function
                 callback();
+                });
             });
         });
     }
