@@ -48,4 +48,8 @@ router.get('/deletegroup', (req,res,next) => {
         res.send('success');
     });
 });
+//Post method for creating a user
+router.post('/createuser', (req,res,next) => {
+
+});
 module.exports = router;

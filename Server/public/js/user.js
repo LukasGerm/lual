@@ -1,6 +1,15 @@
 let users = null;
 let createGroupModal = null;
 const userContainer = document.getElementById('users');
+let createUserModal = null;
+//Function to edit the formular which adds the objectid to the create button
+function openUserModal(){
+
+}
+//Method for creating a user via post-ajax
+function createUser (groupObjectId){
+
+}
 //function to delete a group
 function deleteGroup(objectId){
   //Make a get request to delete the group
@@ -83,6 +92,8 @@ document.addEventListener('DOMContentLoaded', function() {
   let sidenav = M.Sidenav.init(document.querySelectorAll('.sidenav'));
   //Function for creating the createGroup-Modal
   createGroupModal = M.Modal.init(document.getElementById('createGroupModal'));
+  //Init the user modal
+  createUserModal = M.Modal.init(document.getElementById('createUserModal'));
   getUser();
 });
 
