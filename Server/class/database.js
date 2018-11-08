@@ -126,7 +126,7 @@ class database {
         const convObjectId = ObjectId(objectId);
         User.find({group: convObjectId}, (err,doc) => {
             //If a doc is there, callback with the not empty error
-            if(doc == true) return callback("Group is not empty");
+            if(doc.length > 0) return callback("Group is not empty");
             //Delete the group
             Group.find({_id: convObjectId}).remove(() => {
                 this.insertLog("Group '" + objectId + "' deleted", () =>{
