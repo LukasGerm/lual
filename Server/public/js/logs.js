@@ -74,7 +74,7 @@ function showAllLogs(){
 document.addEventListener('DOMContentLoaded', function() {
     let sidenav = M.Sidenav.init(document.querySelectorAll('.sidenav'));
     let datepick = M.Datepicker.init(document.querySelectorAll('.datepicker'), {
-         format: 'yyyy-mm-dd',
+         format: 'yyyy-m-d',
          //If you close the popup, the website gets the logs again but with a filter
          onClose(){
             const dateVal = $('#datepick');
