@@ -85,7 +85,7 @@ class database {
         });
     }
     //Get the logs
-    static getLogs(page, pageSize, callback){
+    static getLogs(page, pageSize, date, callback){
         // set the default pageSize if there is no or invalid pageSize
         if (!pageSize || isNaN(pageSize) || pageSize < 1) {
             pageSize = 10;
@@ -100,7 +100,12 @@ class database {
         }
         // Calculate the number of entries to skip (simulate pagination)
         const pageSkip = page * pageSize;
-        let mongoFind = Log.find();
+        let mongoFind = null;
+        if (date) {
+            mongoFind = Log.find({ date: new RegExp(`^${date}.*$`) });
+        } else {
+            mongoFind = Log.find();
+        }
         if (pageSkip > 0) {
             mongoFind = mongoFind.skip(pageSkip);
         }
@@ -109,8 +114,9 @@ class database {
         });
     }
     // Get count of logs
-    static getLogsCount(callback){
-        Log.find().countDocuments((err, count) => {
+    static getLogsCount(date, callback){
+        let mongoFind = !date ? Log.find() : Log.find({ date: new RegExp(`^${date}.*$`) });
+        mongoFind.countDocuments((err, count) => {
             callback(count);
         });
     }
