@@ -7,7 +7,9 @@ const logPageSize = 10;
 //The filter argument is optional
 //It is for the datepicker closing
 function getLogs(){
-    $.get(`/api/getlogs?page=${currentLogPage}&pageSize=${logPageSize}`, (data,status) => {
+    // set optional date filter in get parameter
+    const dateParam = logFilter ? `&date=${logFilter}` : '';
+    $.get(`/api/getlogs?page=${currentLogPage}&pageSize=${logPageSize}${dateParam}`, (data,status) => {
         $('.preloader-background').fadeIn('fast');
         $('.loader').fadeIn('fast');
         //Clear the div first
@@ -36,7 +38,9 @@ function setPage(page) {
     rebuildPaginationButtons();
 }
 function setPageCount(){
-    $.get('/api/getlogscount', (data,status) => {
+    // set optional date filter in get param
+    const dateParam = logFilter ? `?date=${logFilter}` : '';
+    $.get('/api/getlogscount' + dateParam, (data,status) => {
         const count = data.count;
         logPageCount = getPageCount(count);
         rebuildPaginationButtons();
@@ -83,6 +87,8 @@ document.addEventListener('DOMContentLoaded', function() {
          onClose(){
             const dateVal = $('#datepick');
             logFilter = dateVal.val();
+            // after picking the date, we have to reload the pagecount
+            setPageCount();
             getLogs();
          }
         });
