@@ -44,7 +44,7 @@ function setPageCount(callback){
 function rebuildPaginationButtons() {
     // there is no previous page if we are on pageindex 0
     const leftButtonDisabled = currentLogPage < 1;
-    const rightButtonDisabled = currentLogPage === (logPageCount - 1);
+    const rightButtonDisabled = currentLogPage === (Math.ceil(logPageCount) - 1);
 
     let paginationButtons = '';
     if (leftButtonDisabled) {
