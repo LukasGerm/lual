@@ -70,7 +70,7 @@ function showAllLogs(){
     logFilter = null;
     currentLogPage = 0;
     $('#datepick').val('');
-    getLogs();
+    setPageCount(() => getLogs());
 }
 //Function when the document is ready
 document.addEventListener('DOMContentLoaded', function() {
