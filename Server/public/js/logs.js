@@ -29,20 +29,22 @@ function setPage(page) {
     getLogs();
     rebuildPaginationButtons();
 }
-function setPageCount(){
+function setPageCount(callback){
     // set optional date filter in get param
     const dateParam = logFilter ? `?date=${logFilter}` : '';
     $.get('/api/getlogscount' + dateParam, (data,status) => {
         const count = data.count;
         logPageCount = getPageCount(count);
         rebuildPaginationButtons();
-        console.log(currentLogPage, logPageCount);
+        if (callback) {
+            callback();
+        }
     });   
 }
 function rebuildPaginationButtons() {
     // there is no previous page if we are on pageindex 0
     const leftButtonDisabled = currentLogPage < 1;
-    const rightButtonDisabled = currentLogPage === Math.floor(logPageCount);
+    const rightButtonDisabled = currentLogPage === (logPageCount - 1);
 
     let paginationButtons = '';
     if (leftButtonDisabled) {
@@ -79,11 +81,10 @@ document.addEventListener('DOMContentLoaded', function() {
          onClose(){
             const dateVal = $('#datepick');
             logFilter = dateVal.val();
+            currentLogPage = 0;
             // after picking the date, we have to reload the pagecount
-            setPageCount();
-            getLogs();
+            setPageCount(() => getLogs());
          }
         });
-    getLogs();
-    setPageCount();
+    setPageCount(() => getLogs());
   });
