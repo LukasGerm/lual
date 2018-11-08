@@ -17,15 +17,7 @@ function getLogs(){
         let logs = !data ? [] : JSON.parse(data);
         logs.forEach(element => {
             //create the log elements
-            if (logFilter){
-                //Split it, because you dont want the time, only the date
-                if(logFilter == element.date.split(' ')[0]){
-                    document.getElementById('logs').innerHTML += '<tr><td>'+element.date+'</td><td>'+element.logString+'</td></tr>'
-                }
-            }
-            else{
-                document.getElementById('logs').innerHTML += '<tr><td>'+element.date+'</td><td>'+element.logString+'</td></tr>'
-            }
+            document.getElementById('logs').innerHTML += '<tr><td>'+element.date+'</td><td>'+element.logString+'</td></tr>';
         });
         //Fade out the preloader
         $('.preloader-background').fadeOut('fast');
