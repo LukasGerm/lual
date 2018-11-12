@@ -3,12 +3,58 @@ let createGroupModal = null;
 const userContainer = document.getElementById('users');
 let createUserModal = null;
 //Function to edit the formular which adds the objectid to the create button
-function openUserModal(){
-
+function openUserModal(ObjectId){
+  document.getElementById('objectId').value = ObjectId;
+  //open the modal
+  createUserModal.open();
 }
 //Method for creating a user via post-ajax
-function createUser (groupObjectId){
-
+function createUser (){
+  //serialize the form to an array
+  let postData = $('#createUser').serializeArray();
+  //make the post request
+  $.post('/api/createuser', postData)
+    .done((data) => {
+      switch(data){
+        //Username to short
+        case 'uToShort':
+          M.toast({
+            html: "Error: Username must be at least 5 characters long",
+            classes: "red"
+          });
+          break;
+        //password to short
+        case 'pToShort':
+          M.toast({
+            html: "Error: Password has to be at least 8 characters long",
+            classes: "red"
+          });
+          break;
+        //firstname, lastname or room number is missing
+        case 'missing':
+          M.toast({
+            html: "Error: Something in your form is missing, please check",
+            classes: "red"
+          });  
+          break;
+        //Username taken
+        case 'taken':
+          M.toast({
+            html: "Error: Username is already taken",
+            classes: "red"
+          });
+          break;
+        //Success
+        case "OK":
+          createUserModal.close();
+          getUser();
+          M.toast({
+            html: "user "+postData.username+" created successfuly",
+            classes: "green"
+          });
+          break;
+      }
+    });
 }
 //function to delete a group
 function deleteGroup(objectId){
@@ -38,10 +84,10 @@ function getUser(){
     users = JSON.parse(data);
     let htmlToAdd = "";
     users.groups.forEach(group => {
-      htmlToAdd += `<ul class="collection with-header" id="`+group._id+`"> <li class="collection-header"><div><b>`+group.name+`</b><div onclick="deleteGroup('`+group._id+`')" class="secondary-content"><i class="material-icons">remove</i></div><div href="#" class="secondary-content"><i class="material-icons">add</i></div></div></li>`;
+      htmlToAdd += `<ul class="collection with-header" id="`+group._id+`"> <li class="collection-header"><div><b>`+group.name+`</b><div onclick="deleteGroup('`+group._id+`')" class="secondary-content"><i class="material-icons">remove</i></div><div onclick="openUserModal('`+group._id+`')" class="secondary-content"><i class="material-icons">add</i></div></div></li>`;
       for(let i = 0; i < users.users.length; i++){
         if(group._id === users.users[i].group){
-          htmlToAdd += '<li class="collection-item"><div>'+users.users[i].firstName+' '+users.users[i].lastName+'<a href="#" class="secondary-content"><i class="material-icons">edit</i></a></div></li>';
+          htmlToAdd += '<li class="collection-item"><div>Username: '+users.users[i].username+'<a href="#" class="secondary-content"><i class="material-icons">edit</i></a></div></li>';
         }
       }
       htmlToAdd += '</ul>';

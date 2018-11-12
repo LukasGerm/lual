@@ -10,7 +10,7 @@ const session = require('express-session');
 const app = express();
 app.use(session({
   secret: 'gqgrwhubvaoj09pgbqwuigh903ghiu0q34vqas293hndva',
-  resave: false,
+  resave: true,
   cookie: {
     maxAge: 1200000
   },

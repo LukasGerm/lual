@@ -1,6 +1,7 @@
 const express = require('express');
 const database = require('../class/database');
 const router = express.Router();
+const sha512 = require('js-sha512');
 //Router for getting the logs, returning it as json
 router.get('/getlogs', (req,res,next) => {
     database.getLogs(req.query.page, req.query.pageSize, req.query.date, logs => {
@@ -50,6 +51,33 @@ router.get('/deletegroup', (req,res,next) => {
 });
 //Post method for creating a user
 router.post('/createuser', (req,res,next) => {
-
+    //Define user
+    let user = req.body;
+    //Validation
+    if(user.username.length < 5){
+        return res.send('uToShort');
+    }
+    else if(user.password.length < 8){
+        return res.send('pToShort');
+    }
+    else if(!user.firstName || !user.lastName || !user.roomNumber){
+        return res.send('missing');
+    }
+    database.getUser(user.userName, (doc) => {
+        //Check if the username is taken
+        if(doc){
+            return res.send('taken');
+        }
+        //encrypt the pw
+        user.password = sha512(user.password);
+        //set the adminstate
+        user.isAdmin = user.isAdmin ? true : false;
+        //Set the firstlogin to true
+        user.firstLogin = true;
+        //insert the user
+        database.insertUser(user, () => {
+            return res.sendStatus(200);
+        });
+    });
 });
 module.exports = router;

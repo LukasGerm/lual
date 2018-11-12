@@ -51,14 +51,44 @@
                 <div class="row">
                   <h4>Create User</h4>
                 </div>
-                <div class="row">
-                  <div class="input-field col s6">
-                    <input id="userName" type="text" class="validate" name="userName" required>
-                    <label for="userName">Username</label>
-                  </div>
-                </div>
+                <form id="createUser">
+                    <div class="row">
+                        <div class="input-field col s6">
+                          <input id="objectId" type="hidden" name="group">
+                          <input id="userName" type="text" class="validate" name="username" required>
+                          <label for="userName">Username</label>
+                        </div>
+                        <div class="input-field col s6">
+                          <input id="password" type="password" class="validate" name="password" required>
+                          <label for="password">Password</label>
+                        </div>
+                      </div>
+                      <div class="row">
+                          <div class="input-field col s6">
+                            <input id="firstName" type="text" class="validate" name="firstName" required>
+                            <label for="firstName">First Name</label>
+                          </div>
+                          <div class="input-field col s6">
+                            <input id="lastName" type="text" class="validate" name="lastName" required>
+                            <label for="lastName">Last Name</label>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="input-field col s6">
+                            <input id="roomNumber" type="text" class="validate" name="roomNumber" required>
+                            <label for="roomNumber">Room Number</label>
+                          </div>
+                          <div class="input-field col s6">
+                            <label>
+                              <input type="checkbox" id="isAdmin" name="isAdmin" />
+                              <span>Admin?</span>
+                            </label>
+                          </div>
+                      </div>
+                </form>
               </div>
               <div class="modal-footer" id="userModalFooter">
+                <a class="waves-effect waves-green btn-flat" onclick="createUser()">Create</a>
               </div>
             </div>
           </div>
