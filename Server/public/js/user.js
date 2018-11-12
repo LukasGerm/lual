@@ -137,7 +137,9 @@ function createGroup() {
           groupName.value +
           `</b><div onclick="deleteGroup('` +
           data +
-          `')" class="secondary-content"><i class="material-icons">remove</i></div><div href="#" class="secondary-content"><i class="material-icons">add</i></div></div></li>`;
+          `')" class="secondary-content"><i class="material-icons">remove</i></div><div onclick="openUserModal('` +
+          data +
+          `')" class="secondary-content"><i class="material-icons">add</i></div></div></li>`;
         createGroupModal.close();
         //Here goes code to create the div
       } else {
