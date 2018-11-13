@@ -35,7 +35,19 @@ class database {
       callback(docs);
     });
   }
-  static updateUser(username) {}
+  //used to update the user
+  static updateUser(user, callback) {
+    //Check if the username is taken
+    this.getUser(user.username, (doc) => {
+      //If yes, return it
+      if(doc.username != user.username) return callback("Username is already taken");
+      //Update it
+      User.findOneAndUpdate({_id: user._id}, user, (err) => {
+        if(err) return this.insertLog("Something went wrong updating User: "+ user.username);
+        callback();
+      })
+    });
+  }
   static deleteUser(username) {}
   //Method to insert a new user
   static insertUser(user, callback) {

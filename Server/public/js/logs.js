@@ -89,7 +89,7 @@ function showAllLogs() {
   setPageCount(() => getLogs());
 }
 //Function when the document is ready
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   let sidenav = M.Sidenav.init(document.querySelectorAll(".sidenav"));
   let datepick = M.Datepicker.init(document.querySelectorAll(".datepicker"), {
     format: "yyyy-m-d",

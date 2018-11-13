@@ -3,13 +3,87 @@ let createGroupModal = null;
 let editUserModal = null;
 const userContainer = document.getElementById("users");
 let createUserModal = null;
-//Function for oping the user-edit-mode
-function openEditUserModal(user, groups){
+
+function showToast(data){
+  switch (data) {
+    //Username to short
+    case "uToShort":
+      M.toast({
+        html: "Error: Username must be at least 5 characters long",
+        classes: "red"
+      });
+      break;
+    //password to short
+    case "pToShort":
+      M.toast({
+        html: "Error: Password has to be at least 8 characters long",
+        classes: "red"
+      });
+      break;
+    //firstname, lastname or room number is missing
+    case "missing":
+      M.toast({
+        html: "Error: Something in your form is missing, please check",
+        classes: "red"
+      });
+      break;
+    //Username taken
+    case "taken":
+      M.toast({
+        html: "Error: Username is already taken",
+        classes: "red"
+      });
+      break;
+    //In case the passwords dont match
+    case "pDoNotMatch":
+      M.toast({
+        html: "Error: Passwords do not match",
+        classes: "red"
+      });
+      break;
+    //Success
+    case "OK":
+      createUserModal.close();
+      editUserModal.close();
+      getUser();
+      M.toast({
+        html: "Operation successful",
+        classes: "green"
+      });
+      break;
+    default:
+      M.toast({
+        html: data,
+        classes: "red"
+      });
+    break;
+    }
+}
+//Function for opening the user-edit-mode
+function openEditUserModal(objectId) {
+
+  document.getElementById('userId').value = objectId;
+  //Find the user and return the object
+  const user = users.users.find(user => {
+    return user._id === objectId;
+  });
+  //Prepare the form
+  document.getElementById('editUserName').value = user.username;
+  document.getElementById('editFirstName').value = user.firstName;
+  document.getElementById('editLastName').value = user.lastName;
+  document.getElementById('editRoomNumber').value = user.roomNumber;
+  document.getElementById('editIsAdmin').checked = user.isAdmin;
+
+  //open the edit modal
+  editUserModal.open();
 
 }
 //make the postrequest
-function editUser(){
-
+function editUser() {
+  let postData = $("#editUserForm").serializeArray();
+  $.post("/api/updateuser", postData).done(data => {
+    showToast(data);
+  });
 }
 //Function to edit the formular which adds the objectid to the create button
 function openUserModal(ObjectId) {
@@ -23,45 +97,8 @@ function createUser() {
   let postData = $("#createUser").serializeArray();
   //make the post request
   $.post("/api/createuser", postData).done(data => {
-    switch (data) {
-      //Username to short
-      case "uToShort":
-        M.toast({
-          html: "Error: Username must be at least 5 characters long",
-          classes: "red"
-        });
-        break;
-      //password to short
-      case "pToShort":
-        M.toast({
-          html: "Error: Password has to be at least 8 characters long",
-          classes: "red"
-        });
-        break;
-      //firstname, lastname or room number is missing
-      case "missing":
-        M.toast({
-          html: "Error: Something in your form is missing, please check",
-          classes: "red"
-        });
-        break;
-      //Username taken
-      case "taken":
-        M.toast({
-          html: "Error: Username is already taken",
-          classes: "red"
-        });
-        break;
-      //Success
-      case "OK":
-        createUserModal.close();
-        getUser();
-        M.toast({
-          html: "user " + postData.username + " created successfuly",
-          classes: "green"
-        });
-        break;
-    }
+    //Call the function
+    showToast(data);
   });
 }
 //function to delete a group
@@ -104,15 +141,21 @@ function getUser() {
       for (let i = 0; i < users.users.length; i++) {
         if (group._id === users.users[i].group) {
           htmlToAdd +=
-            '<li class="collection-item"><div>Username: ' +
+            `<li class="collection-item"><div>Username: ` +
             users.users[i].username +
-            '<a href="#" class="secondary-content"><i class="material-icons">edit</i></a></div></li>';
+            `<div onclick="openEditUserModal('` + users.users[i]._id + `')" class="secondary-content"><i class="material-icons">edit</i></div></div></li>`;
         }
       }
       htmlToAdd += "</ul>";
       //add the html to the container
       userContainer.innerHTML = htmlToAdd;
     });
+    //Insert the selectables into the document, but first clear it
+    let groupSelect = document.getElementById('groupSelect');
+    groupSelect.innerHTML = "";
+    users.groups.forEach(group => {
+      groupSelect.innerHTML += '<option value="'+group._id+'">'+group.name+'</option>';
+    })
     $(".preloader-background").fadeOut("fast");
     $(".loader").fadeOut("fast");
   });
@@ -151,7 +194,7 @@ function createGroup() {
     });
   }
 }
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   let sidenav = M.Sidenav.init(document.querySelectorAll(".sidenav"));
   //Function for creating the createGroup-Modal
   createGroupModal = M.Modal.init(document.getElementById("createGroupModal"));
@@ -159,5 +202,8 @@ document.addEventListener("DOMContentLoaded", function() {
   createUserModal = M.Modal.init(document.getElementById("createUserModal"));
   //Init the edit user modal
   editUserModal = M.Modal.init(document.getElementById("editUserModal"));
+  //Init select
+  let select = M.FormSelect.init(document.querySelectorAll('select'));
+
   getUser();
 });

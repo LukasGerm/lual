@@ -1,102 +1,167 @@
 <!DOCTYPE html>
 <html>
-  <head>
-      <%- include ../imports/head %>
-      <link rel="stylesheet" href="/stylesheets/adminstyle.css">
-  </head>
-    <body>
-        <%- include ../imports/sidenav %>
-        <main>
-          <div class="loader">
-                  <div class="preloader-wrapper big active">
-                          <div class="spinner-layer spinner-blue-only">
-                            <div class="circle-clipper left">
-                              <div class="circle"></div>
-                            </div><div class="gap-patch">
-                              <div class="circle"></div>
-                            </div><div class="circle-clipper right">
-                              <div class="circle"></div>
-                            </div>
-                          </div>
-                  </div>
-          </div>
-          <div class="container">
-            <h4>Usermanagement</h4>
-            <div id="users">
 
-            </div>
-            <div class="col">
-              <div class="input-field col s6">
-                <button class="waves-effect waves-light btn modal-trigger" href="#createGroupModal">Create Group</button>
-            </div>
-            </div>
-            <div id="createGroupModal" class="modal">
-              <div class="modal-content">
-                <div class="row">
-                  <h4>Create Group</h4>
-                </div>
-                <div class="row">
-                  <div class="input-field col s6">
-                    <input id="groupName" type="text" class="validate" name="groupName" required>
-                    <label for="groupName">Group Name</label>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <a class="waves-effect waves-green btn-flat" onclick="createGroup()">Create</a>
-              </div>
-            </div>
-            <div id="createUserModal" class="modal">
-              <div class="modal-content">
-                <div class="row">
-                  <h4>Create User</h4>
-                </div>
-                <form id="createUser">
-                    <div class="row">
-                        <div class="input-field col s6">
-                          <input id="objectId" type="hidden" name="group">
-                          <input id="userName" type="text" class="validate" name="username" required>
-                          <label for="userName">Username</label>
-                        </div>
-                        <div class="input-field col s6">
-                          <input id="password" type="password" class="validate" name="password" required>
-                          <label for="password">Password</label>
-                        </div>
-                      </div>
-                      <div class="row">
-                          <div class="input-field col s6">
-                            <input id="firstName" type="text" class="validate" name="firstName" required>
-                            <label for="firstName">First Name</label>
-                          </div>
-                          <div class="input-field col s6">
-                            <input id="lastName" type="text" class="validate" name="lastName" required>
-                            <label for="lastName">Last Name</label>
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="input-field col s6">
-                            <input id="roomNumber" type="text" class="validate" name="roomNumber" required>
-                            <label for="roomNumber">Room Number</label>
-                          </div>
-                          <div class="input-field col s6">
-                            <label>
-                              <input type="checkbox" id="isAdmin" name="isAdmin" />
-                              <span>Admin?</span>
-                            </label>
-                          </div>
-                      </div>
-                </form>
-              </div>
-              <div class="modal-footer" id="userModalFooter">
-                <a class="waves-effect waves-green btn-flat" onclick="createUser()">Create</a>
-              </div>
+<head>
+  <%- include ../imports/head %>
+  <link rel="stylesheet" href="/stylesheets/adminstyle.css">
+</head>
+
+<body>
+  <%- include ../imports/sidenav %>
+  <main>
+    <div class="loader">
+      <div class="preloader-wrapper big active">
+        <div class="spinner-layer spinner-blue-only">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <h4>Usermanagement</h4>
+      <div id="users">
+
+      </div>
+      <div class="col">
+        <div class="input-field col s6">
+          <button class="waves-effect waves-light btn modal-trigger" href="#createGroupModal">Create Group</button>
+        </div>
+      </div>
+      <div id="createGroupModal" class="modal">
+        <div class="modal-content">
+          <div class="row">
+            <h4>Create Group</h4>
+          </div>
+          <div class="row">
+            <div class="input-field col s6">
+              <input id="groupName" type="text" class="validate" name="groupName" required>
+              <label for="groupName">Group Name</label>
             </div>
           </div>
-        </main>        
-        <%- include ../imports/imports %>
-        <script type="text/javascript" src="/js/user.js"></script>
-    </body>
+        </div>
+        <div class="modal-footer">
+          <a class="waves-effect waves-green btn-flat" onclick="createGroup()">Create</a>
+        </div>
+      </div>
+      <div id="createUserModal" class="modal">
+        <div class="modal-content">
+          <div class="row">
+            <h4>Create User</h4>
+          </div>
+          <form id="createUser">
+            <div class="row">
+              <div class="input-field col s6">
+                <input id="objectId" type="hidden" name="group">
+                <input id="userName" type="text" class="validate" name="username" required>
+                <label for="userName">Username</label>
+              </div>
+              <div class="input-field col s6">
+                <input id="password" type="password" class="validate" name="password" required>
+                <label for="password">Password</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s6">
+                <input id="firstName" type="text" class="validate" name="firstName" required>
+                <label for="firstName">First Name</label>
+              </div>
+              <div class="input-field col s6">
+                <input id="lastName" type="text" class="validate" name="lastName" required>
+                <label for="lastName">Last Name</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s6">
+                <input id="roomNumber" type="text" class="validate" name="roomNumber" required>
+                <label for="roomNumber">Room Number</label>
+              </div>
+              <div class="input-field col s6">
+                <label>
+                  <input type="checkbox" id="isAdmin" name="isAdmin" />
+                  <span>Admin?</span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer" id="userModalFooter">
+          <a class="waves-effect waves-green btn-flat" onclick="createUser()">Create</a>
+        </div>
+      </div>
+      <div class="modal" id="editUserModal">
+        <div class="modal-content">
+          <form id="editUserForm">
+            <div class="row">
+              <h4>Update User</h4>
+            </div>
+            <div class="row">
+              <div class="input-field col s6">
+                <input type="hidden" id="userId" name="_id">
+                <input id="editUserName" type="text" class="validate" name="username" placeholder="New Username"
+                  required>
+                <label for="editUserName">Username</label>
+              </div>
+              <div class="input-field col s6">
+                <select id="groupSelect" class="browser-default">
+                      <option value="" disabled selected>Choose the new group</option>
+                      
+                </select>
+              </div> 
+            </div>
+            <div class="row">
+              <div class="input-field col s6">
+                <input id="editPassword" type="password" class="validate" placeholder="New Password" name="password"
+                  required>
+                <label for="editPassword">New Password</label>
+              </div>
+              <div class="input-field col s6">
+                <input id="retypePassword" type="password" class="validate" placeholder="Retype the password" name="retypePassword"
+                  required>
+                <label for="retypePassword">Retype Password</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s6">
+                <input id="editFirstName" type="text" class="validate" placeholder="New First name" name="firstName"
+                  required>
+                <label for="editFirstName">First Name</label>
+              </div>
+              <div class="input-field col s6">
+                <input id="editLastName" type="text" class="validate" placeholder="New Last name" name="lastName"
+                  required>
+                <label for="editLastName">Last Name</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s6">
+                <input id="editRoomNumber" type="text" class="validate" placeholder="New Room Number" name="roomNumber"
+                  required>
+                <label for="editRoomNumber">Room Number</label>
+              </div>
+              <div class="input-field col s6">
+                <label>
+                  <input type="checkbox" id="editIsAdmin" name="isAdmin" />
+                  <span>Admin?</span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer" id="editUserFooter">
+          <a class="waves-effect waves-green btn-flat" onclick="editUser()">Update User</a>
+        </div>
+      </div>
+    </div>
+  </main>
+  <%- include ../imports/imports %>
+  <script type="text/javascript" src="/js/user.js"></script>
+</body>
 
 </html>
-
-
