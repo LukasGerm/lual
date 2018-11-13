@@ -1,7 +1,16 @@
 let users = null;
 let createGroupModal = null;
+let editUserModal = null;
 const userContainer = document.getElementById("users");
 let createUserModal = null;
+//Function for oping the user-edit-mode
+function openEditUserModal(user, groups){
+
+}
+//make the postrequest
+function editUser(){
+
+}
 //Function to edit the formular which adds the objectid to the create button
 function openUserModal(ObjectId) {
   document.getElementById("objectId").value = ObjectId;
@@ -70,9 +79,8 @@ function deleteGroup(objectId) {
       html: "Group successfuly deleted",
       classes: "green"
     });
-    let deletedGroup = document.getElementById(objectId);
-    deletedGroup.parentElement.removeChild(deletedGroup);
-    //Code for deleting the div
+    //Get the users again
+    getUser();
   });
 }
 //Function to get the users from the server
@@ -130,16 +138,7 @@ function createGroup() {
           html: "Group successfuly created",
           classes: "green"
         });
-        userContainer.innerHTML +=
-          `<ul class="collection with-header" id="` +
-          data +
-          `"><li class="collection-header"><div><b>` +
-          groupName.value +
-          `</b><div onclick="deleteGroup('` +
-          data +
-          `')" class="secondary-content"><i class="material-icons">remove</i></div><div onclick="openUserModal('` +
-          data +
-          `')" class="secondary-content"><i class="material-icons">add</i></div></div></li>`;
+        getUser();
         createGroupModal.close();
         //Here goes code to create the div
       } else {
@@ -158,5 +157,7 @@ document.addEventListener("DOMContentLoaded", function() {
   createGroupModal = M.Modal.init(document.getElementById("createGroupModal"));
   //Init the user modal
   createUserModal = M.Modal.init(document.getElementById("createUserModal"));
+  //Init the edit user modal
+  editUserModal = M.Modal.init(document.getElementById("editUserModal"));
   getUser();
 });
