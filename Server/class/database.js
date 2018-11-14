@@ -48,7 +48,16 @@ class database {
       })
     });
   }
-  static deleteUser(username) {}
+  static deleteUser(userId, callback) {
+    User.findOneAndRemove({_id: userId}, (err) => {
+      //If err, return it to the callback
+      if(err) return callback(err);
+      //log it
+      this.insertLog("User with id:'"+userId+"' successfuly deleted");
+      //Go back
+      callback();
+    })
+  }
   //Method to insert a new user
   static insertUser(user, callback) {
     let _user = new User(user);

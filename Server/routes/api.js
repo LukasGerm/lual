@@ -115,5 +115,16 @@ router.post('/updateuser', (req, res, next) => {
         if (err) res.send(err);
         else res.sendStatus(200);
     })
+});
+
+router.get('/deleteuser', (req,res,next) => {
+    const deleteUserId = req.query.userId;
+    //You cannot delete yourself
+    if(deleteUserId === req.session.userId) return res.send("deleteFail");
+    database.deleteUser(deleteUserId, (err) => {
+        //If an error, send it to the client
+        if(err) return res.send(err);
+        res.sendStatus(200);
+    })
 })
 module.exports = router;

@@ -4,7 +4,7 @@ let editUserModal = null;
 const userContainer = document.getElementById("users");
 let createUserModal = null;
 
-function showToast(data){
+function showToast(data) {
   switch (data) {
     //Username to short
     case "uToShort":
@@ -41,6 +41,13 @@ function showToast(data){
         classes: "red"
       });
       break;
+    //if he tries to delete himself
+    case "deleteFail":
+      M.toast({
+        html: "Error: You cannot delete yourself while you are logged in",
+        classes: "red"
+      });
+      break;
     //Success
     case "OK":
       createUserModal.close();
@@ -56,27 +63,35 @@ function showToast(data){
         html: data,
         classes: "red"
       });
-    break;
-    }
+      break;
+  }
+}
+//Function for deleting users
+function deleteUser(objectId) {
+  //Confirm it
+  let confirm = confirm("Do you really want to delete this user?");
+  if (confirm) {
+    $.get("/api/deleteuser?userId=" + objectId, data => {
+      showToast(data);
+    });
+  }
 }
 //Function for opening the user-edit-mode
 function openEditUserModal(objectId) {
-
-  document.getElementById('userId').value = objectId;
+  document.getElementById("userId").value = objectId;
   //Find the user and return the object
   const user = users.users.find(user => {
     return user._id === objectId;
   });
   //Prepare the form
-  document.getElementById('editUserName').value = user.username;
-  document.getElementById('editFirstName').value = user.firstName;
-  document.getElementById('editLastName').value = user.lastName;
-  document.getElementById('editRoomNumber').value = user.roomNumber;
-  document.getElementById('editIsAdmin').checked = user.isAdmin;
+  document.getElementById("editUserName").value = user.username;
+  document.getElementById("editFirstName").value = user.firstName;
+  document.getElementById("editLastName").value = user.lastName;
+  document.getElementById("editRoomNumber").value = user.roomNumber;
+  document.getElementById("editIsAdmin").checked = user.isAdmin;
 
   //open the edit modal
   editUserModal.open();
-
 }
 //make the postrequest
 function editUser() {
@@ -143,7 +158,11 @@ function getUser() {
           htmlToAdd +=
             `<li class="collection-item"><div>Username: ` +
             users.users[i].username +
-            `<div onclick="openEditUserModal('` + users.users[i]._id + `')" class="secondary-content"><i class="material-icons">edit</i></div></div></li>`;
+            `<div onclick="deleteUser('` +
+            users.users[i]._id +
+            `')" class="secondary-content"><i class="material-icons">remove</i></div><div onclick="openEditUserModal('` +
+            users.users[i]._id +
+            `')" class="secondary-content"><i class="material-icons">edit</i></div></div></li>`;
         }
       }
       htmlToAdd += "</ul>";
@@ -151,11 +170,12 @@ function getUser() {
       userContainer.innerHTML = htmlToAdd;
     });
     //Insert the selectables into the document, but first clear it
-    let groupSelect = document.getElementById('groupSelect');
+    let groupSelect = document.getElementById("groupSelect");
     groupSelect.innerHTML = "";
     users.groups.forEach(group => {
-      groupSelect.innerHTML += '<option value="'+group._id+'">'+group.name+'</option>';
-    })
+      groupSelect.innerHTML +=
+        '<option value="' + group._id + '">' + group.name + "</option>";
+    });
     $(".preloader-background").fadeOut("fast");
     $(".loader").fadeOut("fast");
   });
@@ -194,7 +214,7 @@ function createGroup() {
     });
   }
 }
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
   let sidenav = M.Sidenav.init(document.querySelectorAll(".sidenav"));
   //Function for creating the createGroup-Modal
   createGroupModal = M.Modal.init(document.getElementById("createGroupModal"));
@@ -203,7 +223,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //Init the edit user modal
   editUserModal = M.Modal.init(document.getElementById("editUserModal"));
   //Init select
-  let select = M.FormSelect.init(document.querySelectorAll('select'));
+  let select = M.FormSelect.init(document.querySelectorAll("select"));
 
   getUser();
 });

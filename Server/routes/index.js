@@ -20,7 +20,9 @@ router.post('/auth', (req,res,next) => {
       if(typedPassword == user.password){
         //Set the session 
         req.session.login = true;
-        //send the status
+        //Set the session username for preventing to delete itself
+        req.session.userId = user._id;
+        //Send OK
         return res.sendStatus(200);
       }
       else res.sendStatus(401);
