@@ -1,9 +1,13 @@
+variables:
+  MAVEN_DOCKER_IMAGE: "maven:3.6.0-jdk-11"
+  JDK_WIN_URL: "https://download.java.net/java/GA/jdk11/13/GPL/openjdk-11.0.1_windows-x64_bin.zip"
+
 stages:
   - build
   - deploy
 
 build:
-  image: maven:3.6.0-jdk-11
+  image: $MAVEN_DOCKER_IMAGE
   stage: build
   script:
     - pushd Client
@@ -13,15 +17,15 @@ build:
   artifacts:
     paths:
       - ./*.jar
-    expire_in: 3 hours
+    expire_in: 2 hours
 
 deploy:
   image: alpine
   stage: deploy
   script:
     - apk update && apk add ca-certificates && update-ca-certificates && apk add openssl wget unzip zip
-    - wget https://download.java.net/java/GA/jdk11/13/GPL/openjdk-11.0.1_windows-x64_bin.zip && unzip *.zip && rm *.zip && mv jdk* jdk
-    - mkdir lual-client && mv jdk lual-client/jdk && mv ./*.jar lual-client
+    - wget $JDK_WIN_URL && unzip *.zip && rm *.zip && mv jdk* jdk
+    - mkdir lual-client && mv jdk lual-client/jdk && mv ./*.jar lual-client/lual-client.jar && cp Client/lual-client.bat lual-client
     - zip -r lual-client.zip lual-client
   artifacts:
     paths:
