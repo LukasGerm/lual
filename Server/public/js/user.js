@@ -69,8 +69,8 @@ function showToast(data) {
 //Function for deleting users
 function deleteUser(objectId) {
   //Confirm it
-  let confirm = confirm("Do you really want to delete this user?");
-  if (confirm) {
+  let r = confirm("Do you really want to delete this user?");
+  if (r) {
     $.get("/api/deleteuser?userId=" + objectId, data => {
       showToast(data);
     });

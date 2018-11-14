@@ -53,7 +53,7 @@ class database {
       //If err, return it to the callback
       if(err) return callback(err);
       //log it
-      this.insertLog("User with id:'"+userId+"' successfuly deleted");
+      this.insertLog("User with id:'"+userId+"' successfuly deleted", () => {});
       //Go back
       callback();
     })
