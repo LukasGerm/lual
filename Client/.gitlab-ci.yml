@@ -1,0 +1,29 @@
+stages:
+  - build
+  - deploy
+
+build:
+  image: maven:3.6.0-jdk-11
+  stage: build
+  script:
+    - pushd Client
+    - mvn -B clean package
+    - popd
+    - mv Client/target/*.jar .
+  artifacts:
+    paths:
+      - ./*.jar
+    expire_in: 3 hours
+
+deploy:
+  image: alpine
+  stage: deploy
+  script:
+    - apk update && apk add ca-certificates && update-ca-certificates && apk add openssl wget unzip zip
+    - wget https://download.java.net/java/GA/jdk11/13/GPL/openjdk-11.0.1_windows-x64_bin.zip && unzip *.zip && rm *.zip && mv jdk* jdk
+    - mkdir lual-client && mv jdk lual-client/jdk && mv ./*.jar lual-client
+    - zip -r lual-client.zip lual-client
+  artifacts:
+    paths:
+      - ./*.zip
+    expire_in: 1 day
