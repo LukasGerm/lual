@@ -8,9 +8,10 @@ const indexRouter = require('./routes/index');
 const adminRouter = require('./routes/admin');
 const apiRouter = require('./routes/api');
 const session = require('express-session');
+const fs = require('fs');
 //Tls server
-const tls = new tlsServer();
-tls.run();
+const tls = new tlsServer(fs.readFileSync('./certs/privkey.pem'), fs.readFileSync('./certs/cacert.pem'));
+tls.run(8000);
 const app = express();
 app.use(session({
   secret: 'gqgrwhubvaoj09pgbqwuigh903ghiu0q34vqas293hndva',
