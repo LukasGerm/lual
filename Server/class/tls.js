@@ -29,6 +29,8 @@ class tlsServer {
         break;
       //Do nothing or so
       default:
+      //Destroy cause invalid input
+      socket.destroy();
         break;
     }
   }
@@ -41,6 +43,10 @@ class tlsServer {
     }
     //Destroy the socket
     socket.destroy();
+  }
+  //method for alarming the users
+  sendAlarm(user,socket){
+
   }
   run(port) {
     let server;
