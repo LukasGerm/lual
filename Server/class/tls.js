@@ -25,15 +25,15 @@ class tlsServer {
       //If an error occurs
       socket.on('error', (e) => {
           console.log("Connection reset");
+          for (let index = 0; index < this.clients.length; index++) {
+              if(socket === this.clients[index]){
+                  this.clients.splice(index,1);
+              }
+          }
           //Destroy the socket
           socket.destroy();
-          //Delete it from the array
-          this.clients.forEach(client => {
-              if(client === socket){
-                  client = null;
-              }
-          })
-          console.log(socket);
+          console.log(this.clients.length);
+          console.log(this.clients);
       })
     });
     server.listen(port, () => {});
