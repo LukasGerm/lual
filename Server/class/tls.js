@@ -1,5 +1,5 @@
 const tls = require("tls");
-const database = require('./database');
+const database = require("./database");
 //Server for the tls connections
 class tlsServer {
   constructor(key, cert) {
@@ -33,7 +33,7 @@ class tlsServer {
     }
   }
   //Splice the socket from the array or later the user
-  spliceSocket(clients, socket) {
+  spliceUser(clients, socket) {
     for (let index = 0; index < clients.length; index++) {
       if (socket === clients[index]) {
         clients.splice(index, 1);
@@ -56,10 +56,10 @@ class tlsServer {
       //If an error occurs
       socket.on("error", e => {
         console.log("Connection reset");
-        this.spliceSocket(this.users, socket);
+        this.spliceUser(this.users, socket);
       });
       socket.on("end", () => {
-        this.spliceSocket(this.users, socket);
+        this.spliceUser(this.users, socket);
         //Destroy the socket
         socket.destroy();
       });
