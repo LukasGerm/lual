@@ -36,7 +36,7 @@ public class MessageChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
         if (!receivers.contains(messageReceiver)) {
             return;
         }
-        receivers.add(messageReceiver);
+        receivers.remove(messageReceiver);
     }
 
     @Override
