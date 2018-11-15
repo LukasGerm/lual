@@ -1,128 +1,86 @@
 package github.lual.net;
 
-import java.io.ByteArrayOutputStream;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.*;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.charset.StandardCharsets;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * A TlsClient based on Netty
+ */
 public class TlsClient implements Closeable {
 
-    private static final int BUFFER_SIZE = 4096;
+    private final EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
+    private final MessageChannelHandlerAdapter messageChannelHandlerAdapter = new MessageChannelHandlerAdapter();
+    private final Bootstrap bootstrap;
 
-    private AsynchronousSocketChannel client;
-    private InetSocketAddress hostAddress;
-    private final Queue<MessageReceiver> receiverQueue;
-    private AtomicBoolean listening;
+    private final String host;
+    private final int port;
+
+    private ChannelFuture channelFuture;
 
     public TlsClient(String host, int port) throws IOException {
-        this.receiverQueue = new ConcurrentLinkedQueue<>();
-        this.listening = new AtomicBoolean();
-        this.client = AsynchronousSocketChannel.open();
-        this.hostAddress = new InetSocketAddress(host, port);
+        this.host = host;
+        this.port = port;
+
+        // Setup the netty environment
+        bootstrap = new Bootstrap() //
+                .group(eventLoopGroup) //
+                .channel(NioSocketChannel.class) //
+                .option(ChannelOption.SO_KEEPALIVE, true) //
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel socketChannel) throws Exception {
+                        socketChannel.pipeline().addLast(new NettySslHandler(), messageChannelHandlerAdapter);
+                    }
+                });
     }
 
-    public synchronized void connect() throws ExecutionException, InterruptedException {
-        this.client.connect(this.hostAddress).get();
-        System.out.println("Connected");
+    /**
+     * Connects to the server.
+     *
+     * @throws InterruptedException
+     */
+    public void connect() throws InterruptedException {
+        // You can't double-connect
+        if (this.channelFuture != null) {
+            return;
+        }
+
+        this.channelFuture = this.bootstrap.connect(host, port).sync();
+        // channelFuture.channel().closeFuture().sync();
     }
 
     @Override
-    public synchronized void close() throws IOException {
-        this.listening.set(false);
-        this.client.close();
-        System.out.println("Closed");
+    public void close() throws IOException {
+        this.eventLoopGroup.shutdownGracefully();
     }
 
-    public void attachReceiver(MessageReceiver receiver) {
-        if (receiverQueue.contains(receiver)) {
-            return;
-        }
-        receiverQueue.add(receiver);
-        System.out.println("Attached receiver");
+    /**
+     * Sends the message to the server and returns the underlying ChannelFuture. Call sync on the ChannelFuture to make it blocking.
+     *
+     * @param message The message to send
+     * @return The underlying ChannelFuture
+     * @throws InterruptedException
+     */
+    public ChannelFuture sendMessage(String message) throws InterruptedException {
+        ByteBuf buffer = Unpooled.copiedBuffer(message.getBytes(StandardCharsets.UTF_8));
+        return this.channelFuture.channel().writeAndFlush(buffer);
     }
 
-    public void detachReceiver(MessageReceiver receiver) {
-        if (!receiverQueue.contains(receiver)) {
-            return;
-        }
-        receiverQueue.remove(receiver);
-        System.out.println("Removed receiver");
+    /**
+     * Returns the handler adapter. There you can attach or detach the message receivers.
+     *
+     * @return handler adapter
+     */
+    public MessageChannelHandlerAdapter getHandlerAdapter() {
+        return this.messageChannelHandlerAdapter;
     }
-
-    public synchronized Future<Integer> sendMessage(String message) {
-        if (this.client.isOpen()) {
-            byte[] bytes = message.getBytes(StandardCharsets.UTF_8);
-            System.out.println("Sending message");
-            return this.client.write(ByteBuffer.wrap(bytes));
-        }
-        return null;
-    }
-
-    public Runnable getListenLoopRunnable() {
-        return () -> {
-            try {
-                listenLoop();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        };
-    }
-
-    public void listenLoop() throws ExecutionException, InterruptedException, IOException {
-        this.listening.set(true);
-
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
-        boolean reading = false;
-
-        while (listening.get()) {
-            if (!client.isOpen()) {
-                break;
-            }
-            buffer.clear();
-            Future<Integer> readFuture = this.client.read(buffer);
-            int readResult = readFuture.get();
-
-            // Stream/connection broken, no further operations on this connection
-            if (readResult == -1) {
-                bos.close();
-                reading = false;
-                bos = new ByteArrayOutputStream();
-                continue;
-            }
-
-            System.out.println("Read result " + readResult);
-
-            // If data exists, write to output stream
-            if (readResult > 0) {
-                bos.write(buffer.array(), 0, readResult);
-            }
-
-            // When continuing reading, but buffer size is not full, call receivers
-            if (reading && readResult < BUFFER_SIZE) {
-                byte[] bytes = bos.toByteArray();
-                String message = new String(bytes, StandardCharsets.UTF_8);
-                System.out.println("Read message " + message);
-                receiverQueue.forEach(receiver -> receiver.onMessageReceived(message));
-                reading = false;
-                bos.close();
-                bos = new ByteArrayOutputStream();
-            }
-
-            // If there are more bytes, repeat reading
-            if (readResult == BUFFER_SIZE) {
-                reading = true;
-                continue;
-            }
-        }
-    }
-
 }
