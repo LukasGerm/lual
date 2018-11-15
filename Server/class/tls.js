@@ -15,7 +15,7 @@ class tlsServer{
 
     }
     run(port){
-        this.server = tls.createServer(this.options, (socket) => {
+        let server = tls.createServer(this.options, (socket) => {
             //Push the client in the client array
             //Here goes some authentication logic first
             //Only testing code
@@ -25,7 +25,7 @@ class tlsServer{
         });
 
         try {
-            this.server.listen(port, () => {});
+            server.listen(port, () => {});
         } catch (error) {   
             console.log("Connection closed to client");
         }
