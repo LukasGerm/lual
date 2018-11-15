@@ -1,12 +1,16 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+const tlsServer = require('./class/tls');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const adminRouter = require('./routes/admin');
 const apiRouter = require('./routes/api');
 const session = require('express-session');
+//Tls server
+const tls = new tlsServer();
+tls.run();
 const app = express();
 app.use(session({
   secret: 'gqgrwhubvaoj09pgbqwuigh903ghiu0q34vqas293hndva',

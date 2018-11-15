@@ -14,7 +14,8 @@
     "morgan": "~1.9.0",
     "mongoose": "latest",
     "express-session": "latest",
-    "js-sha512": "latest"
+    "js-sha512": "latest",
+    "tls": "latest"
   },
   "devDependencies": {
     "nodemon": "~1.18.5"
