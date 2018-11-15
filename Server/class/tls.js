@@ -1,15 +1,46 @@
 const tls = require("tls");
-
+const database = require('./database');
 //Server for the tls connections
 class tlsServer {
   constructor(key, cert) {
     //initialize the clients array the sockets will be pushed here
-    this.clients = [];
+    this.users = [];
     //Tls certs
     this.options = {
       key: key,
       cert: cert
     };
+  }
+  //Validate the data
+  validateData(data, socket) {
+    //Split by |
+    const splitData = data.split("|");
+    const option = splitData[0];
+
+    switch (option) {
+      //Login case
+      case 1:
+        break;
+      //ChangePW case, when the user first loggs in
+      case 2:
+        break;
+      //Alarm case
+      case 3:
+        break;
+      //Do nothing or so
+      default:
+        break;
+    }
+  }
+  //Splice the socket from the array or later the user
+  spliceSocket(clients, socket) {
+    for (let index = 0; index < clients.length; index++) {
+      if (socket === clients[index]) {
+        clients.splice(index, 1);
+      }
+    }
+    //Destroy the socket
+    socket.destroy();
   }
   run(port) {
     let server;
@@ -17,24 +48,21 @@ class tlsServer {
       //Push the client in the client array
       //Here goes some authentication logic first
       //Only testing code
-      this.clients.push(socket);
+      this.users.push(socket);
       socket.setEncoding("utf8");
-      socket.write("welcome<EOF>\n");
-      console.log(this.clients.length);
-
+      socket.on("data", data => {
+        this.validateData(data);
+      });
       //If an error occurs
-      socket.on('error', (e) => {
-          console.log("Connection reset");
-          for (let index = 0; index < this.clients.length; index++) {
-              if(socket === this.clients[index]){
-                  this.clients.splice(index,1);
-              }
-          }
-          //Destroy the socket
-          socket.destroy();
-          console.log(this.clients.length);
-          console.log(this.clients);
-      })
+      socket.on("error", e => {
+        console.log("Connection reset");
+        this.spliceSocket(this.users, socket);
+      });
+      socket.on("end", () => {
+        this.spliceSocket(this.users, socket);
+        //Destroy the socket
+        socket.destroy();
+      });
     });
     server.listen(port, () => {});
   }
