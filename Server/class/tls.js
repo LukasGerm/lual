@@ -33,7 +33,7 @@ class tlsServer {
                   client = null;
               }
           })
-          console.log(this.clients);
+          console.log(socket);
       })
     });
     server.listen(port, () => {});
