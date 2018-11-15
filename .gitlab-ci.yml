@@ -11,7 +11,7 @@ build:
   stage: build
   script:
     - pushd Client
-    - mvn -B clean package
+    - mvn -B -Djavafx.platform=win clean package
     - popd
     - mv Client/target/*.jar .
   artifacts:
