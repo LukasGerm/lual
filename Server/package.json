@@ -15,7 +15,8 @@
     "mongoose": "latest",
     "express-session": "latest",
     "js-sha512": "latest",
-    "tls": "latest"
+    "tls": "latest",
+    "jsonwebtoken": "latest"
   },
   "devDependencies": {
     "nodemon": "~1.18.5"
