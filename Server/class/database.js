@@ -29,6 +29,19 @@ class database {
       callback(doc);
     });
   }
+  //user by id
+  static getUserById(objectId, callback){
+       //find the user by the username
+       User.findOne({ _id: objectId }, (err, doc) => {
+        //if an error occurs, log in to the datbase
+        if (err) {
+          this.insertLog("Database finderror", () => {});
+          return;
+        }
+        //Return the document
+        callback(doc);
+      });
+  }
   //Used to get all the users
   static getAllUsers(callback) {
     User.find((err, docs) => {
