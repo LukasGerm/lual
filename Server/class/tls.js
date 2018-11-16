@@ -18,14 +18,19 @@ class tlsServer {
     const option = splitData[0];
 
     switch (option) {
-      //Login case
+      // First Login case. The user authenticates by username and hashed password. He gets a jwt token and the object-id back so the client can save it
+      //If the user loggs in first on the client, the user only has to log in once. If the user logs in first time in general, he gets the popup to change his pw
       case 1:
         break;
-      //ChangePW case, when the user first loggs in
+      // Normal Login case. The client authenticates itself by sending the objectid and the jwt token. The Server checks it, if it is expired, it sends back a message.
+      // If not, the user can log in
       case 2:
         break;
-      //Alarm case
+      //Change PW case. If the user first loggs in in general, he gets the popup to change his pw. This case is called then.
       case 3:
+        break;
+      //Alarm case. This case is called, when a client sends an alarm message.
+      case 4:
         break;
       //Do nothing or so
       default:
