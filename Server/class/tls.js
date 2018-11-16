@@ -31,7 +31,7 @@ class tlsServer {
       else{
         //Get the user by id
         database.getUserById(data.userId, doc => {
-          if(doc) return callback('Error: user not found');
+          if(!doc) return callback('Error: user not found');
           if(doc.password !== data.password){
             return callback('Error: Password wrong');
           }
@@ -74,7 +74,6 @@ class tlsServer {
         let token = splitData[1];
         //If an error occurs, the user must log in new
         this.verifyToken(token, (err) => {
-          console.log(err);
           //Wrong pw, should show the form to log in via userdata and get a new token
           if(err) return socket.write("1");
           //Okay, the user is loggedin
