@@ -18,7 +18,7 @@ class tlsServer {
     jwt.sign({
       userId: user._id,
       password: user.password
-    },this.options.key, (err, token) =>{
+    },this.options.key,{algorithm: 'RS256'} ,(err, token) =>{
       //Return it to the callback
       if(err) return callback();
       callback(token);
@@ -74,6 +74,7 @@ class tlsServer {
         let token = splitData[1];
         //If an error occurs, the user must log in new
         this.verifyToken(token, (err) => {
+          console.log(err);
           //Wrong pw, should show the form to log in via userdata and get a new token
           if(err) return socket.write("1");
           //Okay, the user is loggedin
