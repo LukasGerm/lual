@@ -26,7 +26,7 @@ class tlsServer {
   }
   //used to verify a token
   verifyToken(token, callback){
-    jwt.verify(token, (err, data) => {
+    jwt.verify(token,this.options.cert, (err, data) => {
       if(err) callback(err);
       else{
         //Get the user by id
@@ -55,10 +55,10 @@ class tlsServer {
       let password = splitData[2];
       database.getUser(username, (user) => {
         //Number 1 is wrong pw
-        if(user.password !== password) return socket.write(1);
+        if(user.password !== password) return socket.write("1");
         if(user.firstLogin){
           //Number 2  is first login, indicates that the client opens the changepw form
-          return socket.write(2)
+          return socket.write("2")
         }
         //generate a token and send it to the client
         this.generateToken(user, (token)=>{
@@ -75,9 +75,9 @@ class tlsServer {
         //If an error occurs, the user must log in new
         this.verifyToken(token, (err) => {
           //Wrong pw, should show the form to log in via userdata and get a new token
-          if(err) return socket.write(1);
+          if(err) return socket.write("1");
           //Okay, the user is loggedin
-          socket.write(2);
+          socket.write("2");
         });
         break;
       //Change PW case. If the user first loggs in in general, he gets the popup to change his pw. This case is called then.
