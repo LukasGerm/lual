@@ -25,7 +25,7 @@ class tlsServer {
     });
   }
   //used to verify a token
-  verifyToken(token, callback){
+  verifyToken(token,socket, callback){
     jwt.verify(token,this.options.cert, (err, data) => {
       if(err) callback(err);
       else{
@@ -35,6 +35,12 @@ class tlsServer {
           if(doc.password !== data.password){
             return callback('Error: Password wrong');
           }
+          let user = {
+            objectid: data.userId,
+            group: doc.group,
+            socket: socket
+          }
+          this.users.push(user);
           //If nothing is wrong, call the callback
           callback();
         });
@@ -65,6 +71,12 @@ class tlsServer {
           //1 indicates that a token was send
           if(token) socket.write('1|'+token);
           else console.log('Error signing token');
+          let user = {
+            objectid: user._id,
+            group: user.group,
+            socket: socket
+          }
+          this.users.push(user);
         });
       });
         break;
@@ -73,7 +85,7 @@ class tlsServer {
       case "2":
         let token = splitData[1];
         //If an error occurs, the user must log in new
-        this.verifyToken(token, (err) => {
+        this.verifyToken(token,socket, (err) => {
           //Wrong pw, should show the form to log in via userdata and get a new token
           if(err) return socket.write("1");
           //Okay, the user is loggedin
@@ -96,7 +108,7 @@ class tlsServer {
   //Splice the socket from the array or later the user
   spliceUser(clients, socket) {
     for (let index = 0; index < clients.length; index++) {
-      if (socket === clients[index]) {
+      if (socket === clients[index].socket) {
         clients.splice(index, 1);
       }
     }
@@ -113,7 +125,6 @@ class tlsServer {
       //Push the client in the client array
       //Here goes some authentication logic first
       //Only testing code
-      this.users.push(socket);
       socket.setEncoding("utf8");
       socket.on("data", data => {
         this.validateData(data, socket);
