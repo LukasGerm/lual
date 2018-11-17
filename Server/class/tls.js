@@ -29,7 +29,7 @@ class tlsServer {
     jwt.verify(token,this.options.cert, (err, data) => {
       if(err) return callback(err);
         //Get the user by id
-        callback();
+        callback(err, data);
     });
   }
   //Validate the data
@@ -58,7 +58,10 @@ class tlsServer {
             let user = {
               objectid: user._id,
               group: user.group,
-              socket: socket
+              socket: socket,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              roomNumber: user.roomNumber
             }
             this.users.push(user);
             //After that, tell the client everything is okay and logg the user in
@@ -74,7 +77,7 @@ class tlsServer {
       case "2":
         const token = splitData[1];
         //If an error occurs, the user must log in new
-        this.verifyToken(token,socket, (err) => {
+        this.verifyToken(token, (err, data) => {
           //Error happened, show the login form
           if(err) return socket.write("1");
           database.getUserById(data.userId, doc => {
@@ -87,6 +90,7 @@ class tlsServer {
             let user = {
               objectid: data.userId,
               group: doc.group,
+              room: doc.roomNumber,
               socket: socket
             }
             this.users.push(user);
@@ -98,8 +102,8 @@ class tlsServer {
         break;
       //Change PW case. If the user first loggs in in general, he gets the popup to change his pw. This case is called then.
       case "3":
-        let user = splitData[1];
-        let newPassword = splitData[2];
+        const user = splitData[1];
+        const newPassword = splitData[2];
         database.updateUserPassword(user, newPassword, (err) => {
           //Something went wrong
           if(err) return socket.write("3");
@@ -109,6 +113,18 @@ class tlsServer {
         break;
       //Alarm case. This case is called, when a client sends an alarm message.
       case "4":
+        const token = splitData[1];
+        //Verify the token
+        this.verifyToken(token, (err, data) => {
+          if(err) return socket.write(err);
+          //for every user in the array
+          this.users.forEach(user => {
+            if(socket !== user.socket && user.group == data.group){
+              //Send alarm to the group, and the roomnumber plus first and lastname
+              socket.write("4|"+data.roomNumber+"|"+data.firstName+"|"+data.lastName);
+            }
+          });
+        })
         break;
       //Do nothing or so
       default:
