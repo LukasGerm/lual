@@ -25,27 +25,11 @@ class tlsServer {
     });
   }
   //used to verify a token
-  verifyToken(token,socket, callback){
+  verifyToken(token, callback){
     jwt.verify(token,this.options.cert, (err, data) => {
-      if(err) callback(err);
-      else{
+      if(err) return callback(err);
         //Get the user by id
-        database.getUserById(data.userId, doc => {
-          if(!doc) return callback('Error: user not found');
-          if(doc.password !== data.password){
-            return callback('Error: Password wrong');
-          }
-          let user = {
-            objectid: data.userId,
-            group: doc.group,
-            socket: socket
-          }
-          this.users.push(user);
-          //If nothing is wrong, call the callback
-          callback();
-        });
-      }
-      
+        callback();
     });
   }
   //Validate the data
@@ -60,7 +44,7 @@ class tlsServer {
       let username = splitData[1];
       let password = splitData[2];
       database.getUser(username, (user) => {
-        //Number 1 is wrong pw
+        //Number 1 is showing the normal login form
         if(user.password !== password) return socket.write("1");
         if(user.firstLogin){
           //Number 2  is first login, indicates that the client opens the changepw form
@@ -69,14 +53,19 @@ class tlsServer {
         //generate a token and send it to the client
         this.generateToken(user, (token)=>{
           //1 indicates that a token was send
-          if(token) socket.write('1|'+token);
-          else console.log('Error signing token');
-          let user = {
-            objectid: user._id,
-            group: user.group,
-            socket: socket
+          if(token) {
+            socket.write('token|'+token);
+            let user = {
+              objectid: user._id,
+              group: user.group,
+              socket: socket
+            }
+            this.users.push(user);
+            //After that, tell the client everything is okay and logg the user in
+            socket.write('ok');
           }
-          this.users.push(user);
+          else console.log('Error signing token');
+
         });
       });
         break;
@@ -86,10 +75,25 @@ class tlsServer {
         const token = splitData[1];
         //If an error occurs, the user must log in new
         this.verifyToken(token,socket, (err) => {
-          //Wrong pw, should show the form to log in via userdata and get a new token
+          //Error happened, show the login form
           if(err) return socket.write("1");
-          //Okay, the user is loggedin
-          socket.write("2");
+          database.getUserById(data.userId, doc => {
+            //User not found, show the loginform
+            if(!doc) return socket.write("1");
+            //PW Wrong, show the loginform
+            if(doc.password !== data.password){
+              return socket.write("1");
+            }
+            let user = {
+              objectid: data.userId,
+              group: doc.group,
+              socket: socket
+            }
+            this.users.push(user);
+            //Everything is okay, user is loggedin
+            socket.write("ok");
+          });  
+          
         });
         break;
       //Change PW case. If the user first loggs in in general, he gets the popup to change his pw. This case is called then.
