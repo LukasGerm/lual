@@ -61,6 +61,16 @@ class database {
       })
     });
   }
+  //Update the userpassword by Username
+  //Only for use in the tls server
+  static updateUserPassword(user, newPassword, callback){
+    //Find the user, update the password and set the firstlogin to false
+    User.findOneAndUpdate({username:user}, {password: newPassword, firstLogin: false}, (err) => {
+      if(err) return callback(err)
+      callback();
+    });
+  }
+  //Delete user
   static deleteUser(userId, callback) {
     User.findOneAndRemove({_id: userId}, (err) => {
       //If err, return it to the callback

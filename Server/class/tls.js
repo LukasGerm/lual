@@ -83,7 +83,7 @@ class tlsServer {
       // Normal Login case. The client authenticates itself by sending the objectid and the jwt token. The Server checks it, if it is expired, it sends back a message.
       // If not, the user can log in
       case "2":
-        let token = splitData[1];
+        const token = splitData[1];
         //If an error occurs, the user must log in new
         this.verifyToken(token,socket, (err) => {
           //Wrong pw, should show the form to log in via userdata and get a new token
@@ -94,6 +94,14 @@ class tlsServer {
         break;
       //Change PW case. If the user first loggs in in general, he gets the popup to change his pw. This case is called then.
       case "3":
+        let user = splitData[1];
+        let newPassword = splitData[2];
+        database.updateUserPassword(user, newPassword, (err) => {
+          //Something went wrong
+          if(err) return socket.write("3");
+          //Show the normal loginform
+          socket.write("1");
+        }) 
         break;
       //Alarm case. This case is called, when a client sends an alarm message.
       case "4":
