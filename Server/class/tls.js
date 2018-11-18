@@ -37,6 +37,7 @@ class tlsServer {
     //Split by |
     const splitData = data.split("|");
     const option = splitData[0];
+    let token;
     switch (option) {
       // First Login case. The user authenticates by username and hashed password. He gets a jwt token and the object-id back so the client can save it
       //If the user loggs in first on the client, the user only has to log in once. If the user logs in first time in general, he gets the popup to change his pw
@@ -50,6 +51,7 @@ class tlsServer {
           //Number 2  is first login, indicates that the client opens the changepw form
           return socket.write("2")
         }
+        
         //generate a token and send it to the client
         this.generateToken(user, (token)=>{
           //1 indicates that a token was send
@@ -75,7 +77,7 @@ class tlsServer {
       // Normal Login case. The client authenticates itself by sending the objectid and the jwt token. The Server checks it, if it is expired, it sends back a message.
       // If not, the user can log in
       case "2":
-        const token = splitData[1];
+        token = splitData[1];
         //If an error occurs, the user must log in new
         this.verifyToken(token, (err, data) => {
           //Error happened, show the login form
@@ -113,7 +115,7 @@ class tlsServer {
         break;
       //Alarm case. This case is called, when a client sends an alarm message.
       case "4":
-        const token = splitData[1];
+        token = splitData[1];
         //Verify the token
         this.verifyToken(token, (err, data) => {
           if(err) return socket.write(err);
