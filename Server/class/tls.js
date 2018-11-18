@@ -48,10 +48,10 @@ class tlsServer {
         //User not found
         if(!user) return socket.write("1");
         //Number 1 is showing the normal login form
-        if(user.password !== password) return socket.write("1");
+        if(user.password !== password) return socket.write("1|1");
         if(user.firstLogin){
           //Number 2  is first login, indicates that the client opens the changepw form
-          return socket.write("2")
+          return socket.write("1|2")
         }
         
         //generate a token and send it to the client
@@ -69,7 +69,7 @@ class tlsServer {
             }
             this.users.push(user);
             //After that, tell the client everything is okay and logg the user in
-            socket.write('ok');
+            socket.write('1|ok');
           }
           else console.log('Error signing token');
 
@@ -84,13 +84,13 @@ class tlsServer {
         this.verifyToken(token, (err, data) => {
           console.log(err);
           //Error happened, show the login form
-          if(err) return socket.write("1");
+          if(err) return socket.write("2|1");
           database.getUserById(data.userId, doc => {
             //User not found, show the loginform
-            if(!doc) return socket.write("1");
+            if(!doc) return socket.write("2|1");
             //PW Wrong, show the loginform
             if(doc.password !== data.password){
-              return socket.write("1");
+              return socket.write("2|1");
             }
             let user = {
               objectid: data.userId,
@@ -100,7 +100,7 @@ class tlsServer {
             }
             this.users.push(user);
             //Everything is okay, user is loggedin
-            socket.write("ok");
+            socket.write("2|ok");
           });  
           
         });
@@ -111,9 +111,9 @@ class tlsServer {
         const newPassword = splitData[2];
         database.updateUserPassword(user, newPassword, (err) => {
           //Something went wrong
-          if(err) return socket.write("3");
+          if(err) return socket.write("3|3");
           //Show the normal loginform
-          socket.write("1");
+          socket.write("3|1");
         }) 
         break;
       //Alarm case. This case is called, when a client sends an alarm message.
