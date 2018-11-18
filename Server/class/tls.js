@@ -17,7 +17,11 @@ class tlsServer {
     //Sign the token, put the username and password in it
     jwt.sign({
       userId: user._id,
-      password: user.password
+      password: user.password,
+      group: user.group,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      roomNumber: user.roomNumber
     },this.options.key,{algorithm: 'RS256'} ,(err, token) =>{
       //Return it to the callback
       if(err) return callback();
@@ -53,21 +57,19 @@ class tlsServer {
           //Number 2  is first login, indicates that the client opens the changepw form
           return socket.write("1|2")
         }
-        
+        console.log(user);
         //generate a token and send it to the client
         this.generateToken(user, (token)=>{
           //1 indicates that a token was send
           if(token) {
             socket.write('token|'+token);
-            let user = {
+            let pushUser = {
               objectid: user._id,
               group: user.group,
-              socket: socket,
-              firstName: user.firstName,
-              lastName: user.lastName,
-              roomNumber: user.roomNumber
+              socket: socket
             }
-            this.users.push(user);
+            
+            this.users.push(pushUser);
             //After that, tell the client everything is okay and logg the user in
             socket.write('1|ok');
           }
@@ -125,10 +127,10 @@ class tlsServer {
           console.log(data);
           //for every user in the array
           this.users.forEach(user => {
-            
+            console.log(user.socket === socket);
             if(socket !== user.socket && user.group == data.group){
               //Send alarm to the group, and the roomnumber plus first and lastname
-              socket.write("4|"+data.roomNumber+"|"+data.firstName+"|"+data.lastName);
+              user.socket.write("4|"+data.roomNumber+"|"+data.firstName+"|"+data.lastName);
             }
           });
         })
@@ -149,10 +151,6 @@ class tlsServer {
     }
     //Destroy the socket
     socket.destroy();
-  }
-  //method for alarming the users
-  sendAlarm(user,socket){
-
   }
   run(port) {
     let server;
