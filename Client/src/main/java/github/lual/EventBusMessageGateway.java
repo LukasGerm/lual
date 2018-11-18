@@ -40,7 +40,7 @@ public class EventBusMessageGateway {
         // find out the class and object of the message, that should be posted to eventbus
         Optional<ServerMessage> serverMessage = serverMessageClasses.stream() //
             .filter(Objects::nonNull) //
-            .filter(clazz -> clazz.isAssignableFrom(ServerMessage.class)) //
+            .filter(clazz -> ServerMessage.class.isAssignableFrom(clazz)) //
             .map(this::newClassInstance) //
             .filter(Objects::nonNull) //
             .map(obj -> (ServerMessage) obj) //
