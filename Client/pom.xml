@@ -15,6 +15,7 @@
         <jar.netty.version>4.1.31.Final</jar.netty.version>
         <jar.lombok.version>1.18.4</jar.lombok.version>
         <jar.javafx.version>11.0.1</jar.javafx.version>
+        <jar.guava.version>27.0-jre</jar.guava.version>
 
         <plugin.spring-boot-maven.version>2.1.0.RELEASE</plugin.spring-boot-maven.version>
         <plugin.maven-compiler.version>3.8.0</plugin.maven-compiler.version>
@@ -40,6 +41,17 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>${jar.javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${jar.guava.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>failureaccess</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

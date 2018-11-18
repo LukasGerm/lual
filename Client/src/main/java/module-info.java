@@ -3,6 +3,7 @@ module lual.client {
     requires javafx.fxml;
     requires com.fazecast.jSerialComm;
     requires io.netty.all;
+    requires com.google.common;
     requires static lombok;
-    opens github.lual to javafx.graphics;
+    opens github.lual to javafx.graphics, com.google.common;
 }

@@ -1,7 +1,5 @@
 package github.lual.messages.base;
 
-import github.lual.messages.base.ServerMessagePattern;
-
 public abstract class ServerMessage {
 
     public boolean matches(String message) {
