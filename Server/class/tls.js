@@ -45,6 +45,8 @@ class tlsServer {
       let username = splitData[1];
       let password = splitData[2];
       database.getUser(username, (user) => {
+        //User not found
+        if(!user) return socket.write("1");
         //Number 1 is showing the normal login form
         if(user.password !== password) return socket.write("1");
         if(user.firstLogin){
@@ -80,6 +82,7 @@ class tlsServer {
         token = splitData[1];
         //If an error occurs, the user must log in new
         this.verifyToken(token, (err, data) => {
+          console.log(err);
           //Error happened, show the login form
           if(err) return socket.write("1");
           database.getUserById(data.userId, doc => {
@@ -119,8 +122,10 @@ class tlsServer {
         //Verify the token
         this.verifyToken(token, (err, data) => {
           if(err) return socket.write(err);
+          console.log(data);
           //for every user in the array
           this.users.forEach(user => {
+            
             if(socket !== user.socket && user.group == data.group){
               //Send alarm to the group, and the roomnumber plus first and lastname
               socket.write("4|"+data.roomNumber+"|"+data.firstName+"|"+data.lastName);
