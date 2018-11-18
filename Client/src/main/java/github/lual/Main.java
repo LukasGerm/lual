@@ -11,6 +11,11 @@ public class Main extends Application {
     private static final String WINDOW_TITLE = "Lual";
 
     public static void main(String[] args) {
+        String filePath = Thread.currentThread().getContextClassLoader().getResource("server.pfx").getFile();
+        System.setProperty("javax.net.ssl.keyStore", filePath);
+        System.setProperty("javax.net.ssl.keyStorePassword", "changeme");
+        System.setProperty("javax.net.ssl.trustStore", filePath);
+        System.setProperty("javax.net.ssl.trustStorePassword", "changeme");
         Application.launch(args);
     }
 
