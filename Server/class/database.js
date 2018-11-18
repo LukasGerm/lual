@@ -29,6 +29,19 @@ class database {
       callback(doc);
     });
   }
+  //user by id
+  static getUserById(objectId, callback){
+       //find the user by the username
+       User.findOne({ _id: objectId }, (err, doc) => {
+        //if an error occurs, log in to the datbase
+        if (err) {
+          this.insertLog("Database finderror", () => {});
+          return;
+        }
+        //Return the document
+        callback(doc);
+      });
+  }
   //Used to get all the users
   static getAllUsers(callback) {
     User.find((err, docs) => {
@@ -48,6 +61,16 @@ class database {
       })
     });
   }
+  //Update the userpassword by Username
+  //Only for use in the tls server
+  static updateUserPassword(user, newPassword, callback){
+    //Find the user, update the password and set the firstlogin to false
+    User.findOneAndUpdate({username:user}, {password: newPassword, firstLogin: false}, (err) => {
+      if(err) return callback(err)
+      callback();
+    });
+  }
+  //Delete user
   static deleteUser(userId, callback) {
     User.findOneAndRemove({_id: userId}, (err) => {
       //If err, return it to the callback
