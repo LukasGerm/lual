@@ -11,15 +11,20 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.io.Closeable;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A TlsClient based on Netty
  */
 public class TlsClient implements Closeable {
 
+    private final ExecutorService executorService = Executors.newFixedThreadPool(Math.min(2, Runtime.getRuntime().availableProcessors()));
     private final EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
-    private final MessageChannelHandlerAdapter messageChannelHandlerAdapter = new MessageChannelHandlerAdapter();
+    private final MessageChannelHandlerAdapter messageChannelHandlerAdapter = new MessageChannelHandlerAdapter(executorService);
     private final Bootstrap bootstrap;
+    private final AtomicBoolean shutdownHookCalled = new AtomicBoolean();
 
     private final String host;
     private final int port;
@@ -41,6 +46,18 @@ public class TlsClient implements Closeable {
                         socketChannel.pipeline().addLast(new NettySslHandler(), messageChannelHandlerAdapter);
                     }
                 });
+
+        // Add shutdown hook
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                try {
+                    close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     /**
@@ -49,6 +66,9 @@ public class TlsClient implements Closeable {
      * @throws InterruptedException
      */
     public void connect() throws InterruptedException {
+        if (shutdownHookCalled.get()) {
+            throw new IllegalStateException("Client already shutted down. You have to recreate a new client.");
+        }
         // You can't double-connect
         if (this.channelFuture != null) {
             return;
@@ -59,8 +79,13 @@ public class TlsClient implements Closeable {
     }
 
     @Override
-    public void close() throws IOException {
+    public synchronized void close() throws IOException {
+        if (shutdownHookCalled.get()) {
+            return;
+        }
+        shutdownHookCalled.set(true);
         this.eventLoopGroup.shutdownGracefully();
+        this.executorService.shutdown();
     }
 
     /**
@@ -76,11 +101,20 @@ public class TlsClient implements Closeable {
     }
 
     /**
-     * Returns the handler adapter. There you can attach or detach the message receivers.
+     * Adds a message receiver to the receiver adapter.
      *
-     * @return handler adapter
+     * @param messageReceiver The receiver to add.
      */
-    public MessageChannelHandlerAdapter getHandlerAdapter() {
-        return this.messageChannelHandlerAdapter;
+    public void addReceiver(MessageReceiver messageReceiver) {
+        this.messageChannelHandlerAdapter.attachReceiver(messageReceiver);
+    }
+
+    /**
+     * Removes a message receiver from the receiver adapter.
+     *
+     * @param messageReceiver The receiver to remove.
+     */
+    public void removeReceiver(MessageReceiver messageReceiver) {
+        this.messageChannelHandlerAdapter.detachReceiver(messageReceiver);
     }
 }
