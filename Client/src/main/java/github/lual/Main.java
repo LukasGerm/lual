@@ -1,9 +1,10 @@
 package github.lual;
 
 import com.google.common.eventbus.EventBus;
-import github.lual.messages.types.ClientLoginMessage;
 import github.lual.net.TlsClient;
 import github.lual.util.ComponentManager;
+import github.lual.view.HomeView;
+import github.lual.view.ShowComponentEvent;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -26,22 +27,23 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        final ComponentManager componentManager = new ComponentManager(stage);
         final EventBus eventBus = new EventBus();
+        final ComponentManager componentManager = new ComponentManager(stage, eventBus);
         final TlsClient client = new TlsClient("127.0.0.1", 8000);
         final EventBusMessageGateway messageGateway = new EventBusMessageGateway(eventBus, client);
+
         stage.setWidth(WINDOW_WIDTH);
         stage.setHeight(WINDOW_HEIGHT);
         stage.setTitle(WINDOW_TITLE);
+        loadComponents(eventBus);
 
-        // TODO: Show initial UI component
-
-        // FIXME: Here only for testing purpose
-        client.connect();
-        messageGateway.sendClientMessage(new ClientLoginMessage("admin", "admin"));
+        // connect the client
+        // client.connect();
 
         // show the window
         stage.show();
+
+        eventBus.post(ShowComponentEvent.of(HomeView.class));
 
         // close-event required to disconnect client and cleanup resources
         stage.setOnCloseRequest(event -> {
@@ -50,5 +52,9 @@ public class Main extends Application {
             } catch (IOException e) {
             }
         });
+    }
+
+    private void loadComponents(EventBus eventBus) {
+        new HomeView(eventBus);
     }
 }

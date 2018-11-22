@@ -1,5 +1,8 @@
 package github.lual.util;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+import github.lual.view.ShowComponentEvent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -14,7 +17,8 @@ public final class ComponentManager {
 
     private final BorderPane parent;
 
-    public ComponentManager(Stage primaryStage) {
+    public ComponentManager(Stage primaryStage, EventBus eventBus) {
+        eventBus.register(this);
         parent = new BorderPane();
         primaryStage.setScene(new Scene(parent));
     }
@@ -42,5 +46,13 @@ public final class ComponentManager {
      */
     public void setPane(Pane pane) {
         parent.setCenter(pane);
+    }
+
+    @Subscribe
+    public void subscribeEvents(ShowComponentEvent event) throws IOException {
+        if (event.getComponentClass() != null) {
+            return;
+        }
+        setPane(loadComponent(event.getComponent()));
     }
 }

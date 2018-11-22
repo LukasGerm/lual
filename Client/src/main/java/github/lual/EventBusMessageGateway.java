@@ -30,7 +30,6 @@ public class EventBusMessageGateway {
     }
 
     private void handleServerMessage(String message, Throwable throwable) {
-        System.out.println("Got server message: " + message); // TODO: remove
         if (throwable != null) {
             System.err.println("EventBusMessageGateway#handleServerMessage: Exception caught. See stacktrace below.");
             throwable.printStackTrace();
@@ -50,7 +49,6 @@ public class EventBusMessageGateway {
         // call the parse method and post the message to the eventbus
         if (serverMessage.isPresent()) {
             serverMessage.get().parse(message);
-            System.out.println(serverMessage.toString()); // TODO: remove
             eventBus.post(serverMessage.get());
         }
     }
