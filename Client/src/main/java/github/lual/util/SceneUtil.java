@@ -1,9 +1,12 @@
 package github.lual.util;
 
+import github.lual.Configuration;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Util class for scenes.
@@ -34,6 +37,7 @@ public final class SceneUtil {
      * @throws IOException
      */
     public final static Pane loadFXML(String fxml) throws IOException {
-        return FXMLLoader.load(ResourceLoader.getInstance().getResourceURL(fxml));
+        return FXMLLoader.load(ResourceLoader.getInstance().getResourceURL(fxml),
+                ResourceLoader.getInstance().getResourceBundle(Configuration.getInstance().getResourceBundleLanguage()));
     }
 }

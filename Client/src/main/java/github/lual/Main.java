@@ -27,9 +27,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        Configuration config = Configuration.getInstance();
         final EventBus eventBus = new EventBus();
         final ComponentManager componentManager = new ComponentManager(stage, eventBus);
-        final TlsClient client = new TlsClient("127.0.0.1", 8000);
+        final TlsClient client = new TlsClient(config.getHost(), config.getPort());
         final EventBusMessageGateway messageGateway = new EventBusMessageGateway(eventBus, client);
 
         stage.setWidth(WINDOW_WIDTH);
@@ -37,13 +38,12 @@ public class Main extends Application {
         stage.setTitle(WINDOW_TITLE);
         loadComponents(eventBus);
 
-        // connect the client
-        // client.connect();
-
         // show the window
         stage.show();
-
         eventBus.post(ShowComponentEvent.of(HomeView.class));
+
+        // connect the client
+        client.connect();
 
         // close-event required to disconnect client and cleanup resources
         stage.setOnCloseRequest(event -> {
