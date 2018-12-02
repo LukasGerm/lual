@@ -39,8 +39,9 @@ public class EventBusMessageGateway {
 
     private void handleServerMessage(String message, Throwable throwable) {
         if (throwable != null) {
-            System.err.println("EventBusMessageGateway#handleServerMessage: Exception caught. See stacktrace below.");
-            throwable.printStackTrace();
+            Platform.runLater(() -> {
+                Alerts.exception(throwable);
+            });
             return;
         }
 
