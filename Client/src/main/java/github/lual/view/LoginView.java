@@ -6,6 +6,7 @@ import com.google.common.hash.Hashing;
 import github.lual.Configuration;
 import github.lual.messages.types.*;
 import github.lual.util.Scene;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -33,36 +34,46 @@ public class LoginView extends BaseView {
     @FXML
     public void initialize() {
         btnLogin.setOnAction(event -> onLoginButtonClicked());
+        if (Configuration.getInstance().getJWT() != null) {
+            String jwt = Configuration.getInstance().getJWT();
+            getEventBus().post(new ClientTokenLoginMessage());
+        }
     }
 
     private void onLoginButtonClicked() {
         String username = txtUsername.getText().trim();
         String password = txtPassword.getText().trim();
         if ("".equals(username) || "".equals(password)) {
-            System.err.println("Username/password not filled");
             return;
         }
         ClientLoginMessage loginMessage = new ClientLoginMessage(username, Hashing.sha512().hashString(password, StandardCharsets.UTF_8).toString());
         getEventBus().post(loginMessage);
-        System.out.println("Put login message to event bus");
     }
 
     private void onError(String error) {
-        System.err.println(error);
+        Platform.runLater(() -> {
+            Alerts.error("LoginErrorDialogTitle", error, true);
+        });
     }
 
     @Subscribe
     private void onServerLoginInvalidData(ServerLoginInvalidDataMessage message) {
-        onError("invalid data for login");
+        onError("LoginErrorDialogDataWrong");
     }
 
     @Subscribe
     private void onServerLoginPasswordChangeRequired(ServerLoginPasswordChangeRequiredMessage message) {
-        onError("password must be changed for login");
+        onError("LoginErrorDialogPasswordChangeRequired");
+    }
+
+    @Subscribe
+    private void onServerLoginUserNotFound(ServerLoginUserNotFoundMessage message) {
+        onError("LoginErrorDialogUserNotFound");
     }
 
     @Subscribe
     private void onServerLoginOk(ServerLoginOkMessage message) throws IOException {
+        // save the token.
         Configuration.getInstance().setJWT(message.getToken());
         Configuration.getInstance().save();
         ClientTokenLoginMessage loginMessage = new ClientTokenLoginMessage();
@@ -71,11 +82,14 @@ public class LoginView extends BaseView {
 
     @Subscribe
     private void onServerTokenLoginRequired(ServerTokenLoginRequiredMessage message) {
-        onError("token login failed");
+        onError("LoginErrorDialogTokenLoginFailed");
     }
 
     @Subscribe
     private void onServerTokenLoginOk(ServerTokenLoginOkMessage message) {
-        System.out.println("login ok");
+        // FIXME: Only for testing
+        Platform.runLater(() -> {
+            Alerts.info("Login result", "Login using token " + Configuration.getInstance().getJWT() + " successfull", false);
+        });
     }
 }

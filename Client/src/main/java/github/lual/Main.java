@@ -3,18 +3,20 @@ package github.lual;
 import com.google.common.eventbus.EventBus;
 import github.lual.net.TlsClient;
 import github.lual.util.ComponentManager;
+import github.lual.util.ResourceLoader;
+import github.lual.view.Alerts;
 import github.lual.view.LoginView;
 import github.lual.view.ShowComponentEvent;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 public class Main extends Application {
 
     private static final int WINDOW_WIDTH = 500;
     private static final int WINDOW_HEIGHT = 500;
-    private static final String WINDOW_TITLE = "Lual";
 
     public static void main(String[] args) {
         String filePath = Thread.currentThread().getContextClassLoader().getResource("server.pfx").getFile();
@@ -28,6 +30,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Configuration config = Configuration.getInstance();
+        ResourceBundle resourceBundle = ResourceLoader.getInstance().getResourceBundle(config.getResourceBundleLanguage());
         final EventBus eventBus = new EventBus();
         final ComponentManager componentManager = new ComponentManager(stage, eventBus);
         final TlsClient client = new TlsClient(config.getHost(), config.getPort());
@@ -35,15 +38,21 @@ public class Main extends Application {
 
         stage.setWidth(WINDOW_WIDTH);
         stage.setHeight(WINDOW_HEIGHT);
-        stage.setTitle(WINDOW_TITLE);
+        stage.setTitle(resourceBundle.getString("AppTitle"));
         loadComponents(eventBus);
 
         // show the window
         stage.show();
-        eventBus.post(ShowComponentEvent.of(LoginView.class));
 
         // connect the client
-        client.connect();
+        try {
+            client.connect();
+        } catch (Exception e) {
+            Alerts.exception(e);
+            System.exit(1);
+        }
+
+        eventBus.post(ShowComponentEvent.of(LoginView.class));
 
         // close-event required to disconnect client and cleanup resources
         stage.setOnCloseRequest(event -> {

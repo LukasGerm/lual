@@ -7,6 +7,9 @@ import github.lual.messages.base.ServerMessage;
 import github.lual.messages.base.TokenMessage;
 import github.lual.messages.types.*;
 import github.lual.net.TlsClient;
+import github.lual.util.ResourceLoader;
+import github.lual.view.Alerts;
+import javafx.application.Platform;
 
 import java.util.*;
 
@@ -55,7 +58,16 @@ public class EventBusMessageGateway {
         if (serverMessage.isPresent()) {
             serverMessage.get().parse(message);
             eventBus.post(serverMessage.get());
+            return;
         }
+
+        // no message present
+        ResourceBundle resourceBundle = ResourceLoader.getInstance().getResourceBundle(Configuration.getInstance().getResourceBundleLanguage());
+        String errTitle = resourceBundle.getString("ServerMessageUnhandledTitle");
+        String errText = String.format(resourceBundle.getString("ServerMessageUnhandledText"), message);
+        Platform.runLater(() -> {
+            Alerts.error(errTitle, errText, false);
+        });
     }
 
     private Object newClassInstance(Class<?> clazz) {
@@ -73,7 +85,9 @@ public class EventBusMessageGateway {
                 ServerChangePasswordOkMessage.class,
                 ServerLoginInvalidDataMessage.class,
                 ServerLoginOkMessage.class,
+                ServerLoginOkUserRegisteredMessage.class,
                 ServerLoginPasswordChangeRequiredMessage.class,
+                ServerLoginUserNotFoundMessage.class,
                 ServerTokenLoginOkMessage.class,
                 ServerTokenLoginRequiredMessage.class
         };

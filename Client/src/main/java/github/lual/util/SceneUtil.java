@@ -40,7 +40,6 @@ public final class SceneUtil {
      */
     public final static Pane loadFXML(String fxml, Object controller) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
-        // fxmlLoader.setControllerFactory(x -> controller);
         fxmlLoader.setController(controller);
         fxmlLoader.setResources(ResourceLoader.getInstance().getResourceBundle(Configuration.getInstance().getResourceBundleLanguage()));
         fxmlLoader.setLocation(ResourceLoader.getInstance().getResourceURL(fxml));
