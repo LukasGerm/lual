@@ -125,7 +125,7 @@ class tlsServer {
         this.verifyToken(token, (err, data) => {
           if(err) return socket.write(err);
           //Insert the log
-          database.insertLog("Alarm by: "+data.firstName+" "+data.lastName+". At room "+data.roomNumber);
+          database.insertLog("Alarm by: "+data.firstName+" "+data.lastName+". At room "+data.roomNumber, err => {});
           //for every user in the array
           this.users.forEach(user => {
             console.log(user.socket === socket);
