@@ -7,7 +7,7 @@ module lual.client {
     requires static lombok;
     opens github.lual to javafx.graphics, com.google.common;
     opens github.lual.util to javafx.graphics, com.google.common;
-    opens github.lual.view to javafx.graphics, com.google.common;
+    opens github.lual.view to javafx.graphics, javafx.fxml, com.google.common;
     opens github.lual.messages.base to javafx.graphics, com.google.common;
     opens github.lual.messages.types to javafx.graphics, com.google.common;
 }

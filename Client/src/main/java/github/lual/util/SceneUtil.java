@@ -1,6 +1,7 @@
 package github.lual.util;
 
 import github.lual.Configuration;
+import github.lual.view.BaseView;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 
@@ -33,11 +34,16 @@ public final class SceneUtil {
      * Loads the fxml file from resources.
      *
      * @param fxml the path to fxml file.
+     * @param controller the fxml controller
      * @return Loaded fxml as Pane
      * @throws IOException
      */
-    public final static Pane loadFXML(String fxml) throws IOException {
-        return FXMLLoader.load(ResourceLoader.getInstance().getResourceURL(fxml),
-                ResourceLoader.getInstance().getResourceBundle(Configuration.getInstance().getResourceBundleLanguage()));
+    public final static Pane loadFXML(String fxml, Object controller) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        // fxmlLoader.setControllerFactory(x -> controller);
+        fxmlLoader.setController(controller);
+        fxmlLoader.setResources(ResourceLoader.getInstance().getResourceBundle(Configuration.getInstance().getResourceBundleLanguage()));
+        fxmlLoader.setLocation(ResourceLoader.getInstance().getResourceURL(fxml));
+        return fxmlLoader.load();
     }
 }

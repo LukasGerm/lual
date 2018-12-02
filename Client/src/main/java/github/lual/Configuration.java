@@ -1,17 +1,17 @@
 package github.lual;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.Properties;
 
 public class Configuration {
 
     private static Configuration configuration;
     private final Properties properties;
+    private final File confFile;
 
     private Configuration() {
         properties = new Properties();
-        File confFile = new File("config.properties");
+        confFile = new File("config.properties");
         if (!confFile.exists()) {
             return;
         }
@@ -55,5 +55,27 @@ public class Configuration {
             return 8000;
         }
         return Integer.parseInt(port);
+    }
+
+    public String getJWT() {
+        String jwt = properties.getProperty("jwt");
+        if (jwt == null || jwt.trim().length() < 1) {
+            return null;
+        }
+        return jwt;
+    }
+
+    public Configuration setJWT(String jwt) {
+        if (jwt == null || jwt.trim().length() < 1) {
+            return this;
+        }
+        properties.setProperty("jwt", jwt);
+        return this;
+    }
+
+    public void save() throws IOException {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(confFile)) {
+            properties.store(fileOutputStream, null);
+        }
     }
 }

@@ -2,6 +2,7 @@ package github.lual.util;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import github.lual.view.BaseView;
 import github.lual.view.ShowComponentEvent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -37,7 +38,7 @@ public final class ComponentManager {
      */
     public Pane loadComponent(Object component) throws IOException {
         github.lual.util.Scene scene = SceneUtil.getSceneAnnotation(component);
-        return SceneUtil.loadFXML(scene.value());
+        return SceneUtil.loadFXML(scene.value(), component);
     }
 
     /**

@@ -4,6 +4,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import github.lual.messages.base.ClientMessage;
 import github.lual.messages.base.ServerMessage;
+import github.lual.messages.base.TokenMessage;
 import github.lual.messages.types.*;
 import github.lual.net.TlsClient;
 
@@ -26,6 +27,10 @@ public class EventBusMessageGateway {
 
     @Subscribe
     public void sendClientMessage(ClientMessage clientMessage) throws InterruptedException {
+        if (clientMessage instanceof TokenMessage) {
+            TokenMessage tokenMessage = (TokenMessage) clientMessage;
+            tokenMessage.setToken(Configuration.getInstance().getJWT());
+        }
         this.tlsClient.sendMessage(clientMessage.getMessage());
     }
 

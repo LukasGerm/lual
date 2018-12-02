@@ -3,7 +3,7 @@ package github.lual;
 import com.google.common.eventbus.EventBus;
 import github.lual.net.TlsClient;
 import github.lual.util.ComponentManager;
-import github.lual.view.HomeView;
+import github.lual.view.LoginView;
 import github.lual.view.ShowComponentEvent;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -40,7 +40,7 @@ public class Main extends Application {
 
         // show the window
         stage.show();
-        eventBus.post(ShowComponentEvent.of(HomeView.class));
+        eventBus.post(ShowComponentEvent.of(LoginView.class));
 
         // connect the client
         client.connect();
@@ -55,6 +55,6 @@ public class Main extends Application {
     }
 
     private void loadComponents(EventBus eventBus) {
-        new HomeView(eventBus);
+        new LoginView(eventBus);
     }
 }
