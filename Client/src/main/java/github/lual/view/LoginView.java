@@ -87,9 +87,6 @@ public class LoginView extends BaseView {
 
     @Subscribe
     private void onServerTokenLoginOk(ServerTokenLoginOkMessage message) {
-        // FIXME: Only for testing
-        Platform.runLater(() -> {
-            Alerts.info("Login result", "Login using token " + Configuration.getInstance().getJWT() + " successfull", false);
-        });
+        getEventBus().post(ShowComponentEvent.of(MainView.class));
     }
 }

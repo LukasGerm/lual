@@ -2,8 +2,10 @@ package github.lual.util;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import github.lual.view.Alerts;
 import github.lual.view.BaseView;
 import github.lual.view.ShowComponentEvent;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -50,10 +52,16 @@ public final class ComponentManager {
     }
 
     @Subscribe
-    public void subscribeEvents(ShowComponentEvent event) throws IOException {
+    public void subscribeEvents(ShowComponentEvent event) {
         if (event.getComponentClass() != null) {
             return;
         }
-        setPane(loadComponent(event.getComponent()));
+        Platform.runLater(() -> {
+            try {
+                setPane(loadComponent(event.getComponent()));
+            } catch (IOException e) {
+                Alerts.exception(e);
+            }
+        });
     }
 }

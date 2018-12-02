@@ -6,6 +6,7 @@ import github.lual.util.ComponentManager;
 import github.lual.util.ResourceLoader;
 import github.lual.view.Alerts;
 import github.lual.view.LoginView;
+import github.lual.view.MainView;
 import github.lual.view.ShowComponentEvent;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -65,5 +66,6 @@ public class Main extends Application {
 
     private void loadComponents(EventBus eventBus) {
         new LoginView(eventBus);
+        new MainView(eventBus);
     }
 }
