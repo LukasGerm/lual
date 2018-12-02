@@ -1,3 +1,4 @@
 Client/*.iml
 Client/.idea
 Client/target
+Client/config.properties

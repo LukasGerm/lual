@@ -3,7 +3,7 @@ package github.lual.messages.types;
 import github.lual.messages.base.ServerMessage;
 import github.lual.messages.base.ServerMessagePattern;
 
-@ServerMessagePattern("^token\\|.+\\|ok$")
+@ServerMessagePattern("^token\\|.+$")
 public class ServerLoginOkMessage extends ServerMessage {
 
     private String token;
