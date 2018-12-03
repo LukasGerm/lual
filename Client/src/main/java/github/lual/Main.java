@@ -1,5 +1,6 @@
 package github.lual;
 
+import com.fazecast.jSerialComm.SerialPort;
 import com.google.common.eventbus.EventBus;
 import github.lual.net.TlsClient;
 import github.lual.util.ComponentManager;
@@ -12,6 +13,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ResourceBundle;
 
 public class Main extends Application {
@@ -30,6 +32,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        jSerialTest();
         Configuration config = Configuration.getInstance();
         ResourceBundle resourceBundle = ResourceLoader.getInstance().getResourceBundle(config.getResourceBundleLanguage());
         final EventBus eventBus = new EventBus();
@@ -67,5 +70,29 @@ public class Main extends Application {
     private void loadComponents(EventBus eventBus) {
         new LoginView(eventBus);
         new MainView(eventBus);
+    }
+
+    private void jSerialTest() {
+        SerialPort[] serialPorts = SerialPort.getCommPorts();
+        if (serialPorts.length < 1) {
+            Alerts.error("No serial port", "No serial port found.", false);
+            return;
+        }
+        SerialPort serialPort = serialPorts[0];
+        serialPort.openPort();
+        try {
+            while(true) {
+                while (serialPort.bytesAvailable() == 0) {
+                    Thread.sleep(20);
+                }
+
+                byte[] readBuffer = new byte[serialPort.bytesAvailable()];
+                int numRead = serialPort.readBytes(readBuffer, readBuffer.length);
+                String hex = String.format("%040x", new BigInteger(1, readBuffer));
+                Alerts.info("SerialPort result", hex, false);
+            }
+        } catch (Exception e) {
+            Alerts.exception(e);
+        }
     }
 }
