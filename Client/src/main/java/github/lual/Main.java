@@ -92,6 +92,7 @@ public class Main extends Application {
                 });
             }
             SerialPort serialPort = serialPorts[0];
+            serialPort.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 0, 0);
             serialPort.openPort();
             try {
                 while(true) {
