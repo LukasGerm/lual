@@ -97,16 +97,22 @@ public class Main extends Application {
             try {
                 while(true) {
                     int bytesAvailable = serialPort.bytesAvailable();
-                    while (bytesAvailable <= 0) {
+                    while (bytesAvailable == 0) {
                         Thread.sleep(20);
                     }
 
-                    byte[] readBuffer = new byte[bytesAvailable];
-                    int numRead = serialPort.readBytes(readBuffer, readBuffer.length);
-                    String hex = String.format("%040x", new BigInteger(1, readBuffer));
-                    Platform.runLater(() -> {
-                        Alerts.info("SerialPort result", hex, false);
-                    });
+                    if (bytesAvailable < 0) {
+                        Platform.runLater(() -> {
+                            Alerts.info("SerialPort result", "<empty>", false);
+                        });
+                    } else {
+                        byte[] readBuffer = new byte[bytesAvailable];
+                        int numRead = serialPort.readBytes(readBuffer, readBuffer.length);
+                        String hex = String.format("%040x", new BigInteger(1, readBuffer));
+                        Platform.runLater(() -> {
+                            Alerts.info("SerialPort result", hex, false);
+                        });
+                    }
                 }
             } catch (Exception e) {
                 Platform.runLater(() -> {
