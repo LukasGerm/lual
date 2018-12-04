@@ -78,6 +78,9 @@ public class Main extends Application {
             Alerts.error("No serial port", "No serial port found.", false);
             return;
         }
+        for (int i = 0; i < serialPorts.length; i++) {
+            Alerts.info("COM-Port " + i, "COM-Port Index" + i + " => " + serialPorts[i].getDescriptivePortName() + " / " + serialPorts[i].getPortDescription() + " / " + serialPorts[i].getSystemPortName(), false );
+        }
         SerialPort serialPort = serialPorts[0];
         serialPort.openPort();
         try {
