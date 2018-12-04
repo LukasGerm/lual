@@ -82,7 +82,7 @@ public class Main extends Application {
         serialPort.openPort();
         try {
             while(true) {
-                while (serialPort.bytesAvailable() == 0) {
+                while (serialPort.bytesAvailable() <= 0) {
                     Thread.sleep(20);
                 }
 
