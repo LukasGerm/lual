@@ -21,10 +21,11 @@ import java.util.ResourceBundle;
 public class Main extends Application {
 
     private static final String KEYSTROKE_HOTKEY = "control alt 0";
-    private static final int WINDOW_WIDTH = 500;
-    private static final int WINDOW_HEIGHT = 500;
+    public static final int WINDOW_WIDTH = 500;
+    public static final int WINDOW_HEIGHT = 500;
 
     private NotificationStage notificationStage;
+    private Stage stage;
 
     public static void main(String[] args) {
         String filePath = Thread.currentThread().getContextClassLoader().getResource("server.pfx").getFile();
@@ -37,6 +38,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        this.stage = stage;
         Configuration config = Configuration.getInstance();
         ResourceBundle resourceBundle = ResourceLoader.getInstance().getResourceBundle(config.getResourceBundleLanguage());
         notificationStage = new NotificationStage();
@@ -52,6 +54,11 @@ public class Main extends Application {
         stage.setWidth(WINDOW_WIDTH);
         stage.setHeight(WINDOW_HEIGHT);
         stage.setTitle(resourceBundle.getString("AppTitle"));
+        stage.iconifiedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                stage.hide();
+            }
+        });
 
         URL iconURL = ResourceLoader.getInstance().getResourceURL("icon.png");
         stage.getIcons().add(new javafx.scene.image.Image(iconURL.openStream()));
@@ -87,6 +94,13 @@ public class Main extends Application {
         new LoginView(eventBus);
         new MainView(eventBus);
         new ChangePasswordView(eventBus);
+    }
+
+    @Subscribe
+    private void onSendToTray(SendToTrayEvent event) {
+        Platform.runLater(() -> {
+            stage.setIconified(true);
+        });
     }
 
     @Subscribe

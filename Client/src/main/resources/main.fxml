@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/10.0.2" xmlns:fx="http://javafx.com/fxml/1">
-   <top>
-      <HBox BorderPane.alignment="CENTER">
-         <children>
-            <Button fx:id="btnAlarm" mnemonicParsing="false" text="Test Alarm" />
-         </children>
-      </HBox>
-   </top>
    <center>
       <ListView fx:id="alarmListView" BorderPane.alignment="CENTER" />
    </center>

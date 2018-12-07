@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static github.lual.Main.WINDOW_HEIGHT;
+import static github.lual.Main.WINDOW_WIDTH;
+
 public class Tray {
 
     public Tray(Stage stage) {
@@ -36,6 +39,9 @@ public class Tray {
 
         openAppMenuItem.addActionListener(event -> {
             Platform.runLater(() -> {
+                stage.show();
+                stage.setWidth(WINDOW_WIDTH);
+                stage.setHeight(WINDOW_HEIGHT);
                 stage.setIconified(false);
                 stage.toFront();
             });
