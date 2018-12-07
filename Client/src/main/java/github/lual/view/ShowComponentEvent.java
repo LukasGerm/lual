@@ -4,6 +4,7 @@ public class ShowComponentEvent<T extends BaseView> {
 
     private final Class<T> componentClass;
     private final T component;
+    private Object data;
 
     private ShowComponentEvent(Class<T> componentClass, T component) {
         this.componentClass = componentClass;
@@ -24,5 +25,13 @@ public class ShowComponentEvent<T extends BaseView> {
 
     public T getComponent() {
         return component;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+
+    public Object getData() {
+        return data;
     }
 }

@@ -68,7 +68,9 @@ public class LoginView extends BaseView {
         Platform.runLater(() -> {
             Alerts.warn("LoginErrorDialogTitle", "LoginErrorDialogPasswordChangeRequired", true);
         });
-        getEventBus().post(ShowComponentEvent.of(ChangePasswordView.class));
+        ShowComponentEvent event = ShowComponentEvent.of(ChangePasswordView.class);
+        event.setData(txtUsername.getText());
+        getEventBus().post(event);
     }
 
     @Subscribe

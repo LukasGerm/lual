@@ -22,8 +22,8 @@ import java.util.ResourceBundle;
 public class Main extends Application {
 
     private static final String KEYSTROKE_HOTKEY = "control alt 0";
-    public static final int WINDOW_WIDTH = 500;
-    public static final int WINDOW_HEIGHT = 500;
+    public static final int WINDOW_WIDTH = 400;
+    public static final int WINDOW_HEIGHT = 300;
 
     private NotificationStage notificationStage;
     private Stage stage;
@@ -63,6 +63,8 @@ public class Main extends Application {
 
         stage.setWidth(WINDOW_WIDTH);
         stage.setHeight(WINDOW_HEIGHT);
+        stage.setMinWidth(WINDOW_WIDTH);
+        stage.setMinHeight(WINDOW_HEIGHT);
         stage.setTitle(resourceBundle.getString("AppTitle"));
         stage.iconifiedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
