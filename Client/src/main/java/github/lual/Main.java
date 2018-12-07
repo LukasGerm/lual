@@ -48,6 +48,7 @@ public class Main extends Application {
             SingleInstanceLock.getInstance().lock();
         } catch (Exception e) {
             Alerts.exception(e);
+            System.exit(0);
         }
 
         notificationStage = new NotificationStage();
