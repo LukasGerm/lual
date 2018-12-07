@@ -62,7 +62,7 @@ public class Alerts {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(resourceBundle.getString("ExceptionDialogTitle"));
         alert.setHeaderText(null);
-        alert.setContentText(resourceBundle.getString("ExceptionDialogText"));
+        alert.setContentText(String.format(resourceBundle.getString("ExceptionDialogText"), throwable.getMessage()));
 
         String exceptionText = null;
         try (StringWriter stringWriter = new StringWriter()) {
@@ -72,8 +72,6 @@ public class Alerts {
             exceptionText = stringWriter.toString();
         } catch (IOException e) {
         }
-
-        Label label = new Label(resourceBundle.getString("ExceptionDialogStacktraceLabel"));
 
         TextArea textArea = new TextArea(exceptionText);
         textArea.setEditable(false);
@@ -86,8 +84,7 @@ public class Alerts {
 
         GridPane expContent = new GridPane();
         expContent.setMaxWidth(Double.MAX_VALUE);
-        expContent.add(label, 0, 0);
-        expContent.add(textArea, 0, 1);
+        expContent.add(textArea, 0, 0);
 
         alert.getDialogPane().setExpandableContent(expContent);
         alert.showAndWait();
