@@ -1,7 +1,5 @@
 package github.lual.messages.base;
 
-import github.lual.messages.base.ClientMessageFormat;
-
 public abstract class ClientMessage {
 
     protected abstract String[] getValues();
