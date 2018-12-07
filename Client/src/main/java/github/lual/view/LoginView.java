@@ -4,7 +4,6 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.hash.Hashing;
 import github.lual.Configuration;
-import github.lual.ShowStageEvent;
 import github.lual.messages.types.*;
 import github.lual.util.Scene;
 import javafx.application.Platform;

@@ -1,5 +1,6 @@
-package github.lual;
+package github.lual.view;
 
+import github.lual.Configuration;
 import github.lual.util.ResourceLoader;
 import javafx.application.Platform;
 import javafx.stage.Stage;

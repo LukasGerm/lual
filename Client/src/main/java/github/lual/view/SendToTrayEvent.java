@@ -1,4 +1,4 @@
-package github.lual;
+package github.lual.view;
 
 public class SendToTrayEvent {
 }
