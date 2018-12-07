@@ -5,8 +5,11 @@ import github.lual.util.ResourceLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,6 +29,7 @@ public class Alerts {
         alert.setHeaderText(null);
         alert.setContentText(message);
 
+        setIcon(alert);
         alert.showAndWait();
     }
 
@@ -40,6 +44,7 @@ public class Alerts {
         alert.setHeaderText(null);
         alert.setContentText(message);
 
+        setIcon(alert);
         alert.showAndWait();
     }
 
@@ -54,6 +59,7 @@ public class Alerts {
         alert.setHeaderText(null);
         alert.setContentText(message);
 
+        setIcon(alert);
         alert.showAndWait();
     }
 
@@ -87,6 +93,16 @@ public class Alerts {
         expContent.add(textArea, 0, 0);
 
         alert.getDialogPane().setExpandableContent(expContent);
+        setIcon(alert);
         alert.showAndWait();
+    }
+
+    private static void setIcon(Alert alert) {
+        Window window = alert.getDialogPane().getScene().getWindow();
+        if (!(window instanceof Stage)) {
+            return;
+        }
+        Stage stage = (Stage) window;
+        stage.getIcons().add(new Image(ResourceLoader.getInstance().getResourceURL("icon.png").toExternalForm()));
     }
 }
