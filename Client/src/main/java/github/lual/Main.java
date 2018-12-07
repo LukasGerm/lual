@@ -5,15 +5,11 @@ import com.google.common.eventbus.EventBus;
 import github.lual.net.TlsClient;
 import github.lual.util.ComponentManager;
 import github.lual.util.ResourceLoader;
-import github.lual.view.Alerts;
-import github.lual.view.LoginView;
-import github.lual.view.MainView;
-import github.lual.view.ShowComponentEvent;
+import github.lual.view.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -73,6 +69,7 @@ public class Main extends Application {
     private void loadComponents(EventBus eventBus) {
         new LoginView(eventBus);
         new MainView(eventBus);
+        new ChangePasswordView(eventBus);
     }
 
     private void jSerialTest() {

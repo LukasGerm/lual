@@ -43,6 +43,20 @@ public class Alerts {
         alert.showAndWait();
     }
 
+    public static void warn(String title, String message, boolean resourceBundle) {
+        if (resourceBundle) {
+            ResourceBundle bundle = ResourceLoader.getInstance().getResourceBundle(Configuration.getInstance().getResourceBundleLanguage());
+            title = bundle.getString(title);
+            message = bundle.getString(message);
+        }
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+
+        alert.showAndWait();
+    }
+
     public static void exception(Throwable throwable) {
         ResourceBundle resourceBundle = ResourceLoader.getInstance().getResourceBundle(Configuration.getInstance().getResourceBundleLanguage());
         Alert alert = new Alert(Alert.AlertType.ERROR);
