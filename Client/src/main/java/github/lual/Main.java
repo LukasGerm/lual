@@ -8,6 +8,7 @@ import github.lual.net.TlsClient;
 import github.lual.util.ComponentManager;
 import github.lual.util.ResourceLoader;
 import github.lual.view.*;
+import io.netty.channel.AbstractChannel;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -16,6 +17,7 @@ import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -91,7 +93,11 @@ public class Main extends Application {
         try {
             client.connect();
         } catch (Exception e) {
-            Alerts.exception(e);
+            if (e.getCause() instanceof ConnectException) {
+                Alerts.error("ConnectExceptionTitle", "ConnectExceptionText", true);
+            } else {
+                Alerts.exception(e);
+            }
             System.exit(1);
         }
 
