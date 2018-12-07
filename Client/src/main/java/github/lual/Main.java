@@ -10,6 +10,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -31,7 +32,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        jSerialTest();
         Configuration config = Configuration.getInstance();
         ResourceBundle resourceBundle = ResourceLoader.getInstance().getResourceBundle(config.getResourceBundleLanguage());
         final EventBus eventBus = new EventBus();
@@ -48,7 +48,7 @@ public class Main extends Application {
         stage.show();
 
         // connect the client
-        /*try {
+        try {
             client.connect();
         } catch (Exception e) {
             Alerts.exception(e);
@@ -63,7 +63,7 @@ public class Main extends Application {
                 client.close();
             } catch (IOException e) {
             }
-        });*/
+        });
     }
 
     private void loadComponents(EventBus eventBus) {
