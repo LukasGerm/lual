@@ -14,12 +14,16 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -47,6 +51,7 @@ public class Main extends Application {
         ResourceBundle resourceBundle = ResourceLoader.getInstance().getResourceBundle(config.getResourceBundleLanguage());
         notificationStage = new NotificationStage();
         notificationStage.showInBackground();
+        loadSystemTray(stage);
 
         final EventBus eventBus = new EventBus();
         eventBus.register(this);
@@ -57,6 +62,10 @@ public class Main extends Application {
         stage.setWidth(WINDOW_WIDTH);
         stage.setHeight(WINDOW_HEIGHT);
         stage.setTitle(resourceBundle.getString("AppTitle"));
+
+        URL iconURL = ResourceLoader.getInstance().getResourceURL("icon.png");
+        stage.getIcons().add(new javafx.scene.image.Image(iconURL.openStream()));
+
         loadComponents(eventBus);
 
         // show the window
@@ -78,6 +87,7 @@ public class Main extends Application {
             try {
                 notificationStage.close();
                 client.close();
+                System.exit(0);
             } catch (IOException e) {
             }
         });
@@ -88,6 +98,48 @@ public class Main extends Application {
         provider.register(KeyStroke.getKeyStroke(KEYSTROKE_HOTKEY), hotKey -> {
             eventBus.post(new ClientAlarmMessage());
         });
+    }
+
+    private void loadSystemTray(Stage stage) {
+        if (!SystemTray.isSupported()) {
+            return;
+        }
+        ResourceBundle bundle = ResourceLoader.getInstance().getResourceBundle(Configuration.getInstance().getResourceBundleLanguage());
+        URL iconResource = ResourceLoader.getInstance().getResourceURL("icon.png");
+        Image iconImage;
+        try {
+            iconImage = ImageIO.read(iconResource);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // load Image
+        PopupMenu popupMenu = new PopupMenu();
+        MenuItem openAppMenuItem = new MenuItem(bundle.getString("TrayMenuOpenApp"));
+        MenuItem closeAppMenuItem = new MenuItem(bundle.getString("TrayMenuCloseApp"));
+        popupMenu.add(openAppMenuItem);
+        popupMenu.add(closeAppMenuItem);
+
+        openAppMenuItem.addActionListener(event -> {
+            Platform.runLater(() -> {
+                stage.setIconified(false);
+                stage.toFront();
+            });
+        });
+        closeAppMenuItem.addActionListener(event -> {
+            Platform.runLater(() -> {
+                stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+            });
+        });
+
+        TrayIcon trayIcon = new TrayIcon(iconImage, bundle.getString("AppTitle"), popupMenu);
+        trayIcon.setImageAutoSize(true);
+        try {
+            SystemTray.getSystemTray().add(trayIcon);
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadComponents(EventBus eventBus) {
