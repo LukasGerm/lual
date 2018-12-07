@@ -65,9 +65,6 @@ public class Main extends Application {
 
         loadComponents(eventBus);
 
-        // show the window
-        stage.show();
-
         // connect the client
         try {
             client.connect();
@@ -100,6 +97,13 @@ public class Main extends Application {
     private void onSendToTray(SendToTrayEvent event) {
         Platform.runLater(() -> {
             stage.setIconified(true);
+        });
+    }
+
+    @Subscribe
+    private void onShowStage(ShowStageEvent event) {
+        Platform.runLater(() -> {
+            stage.show();
         });
     }
 

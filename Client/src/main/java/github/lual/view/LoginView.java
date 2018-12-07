@@ -4,6 +4,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.hash.Hashing;
 import github.lual.Configuration;
+import github.lual.ShowStageEvent;
 import github.lual.messages.types.*;
 import github.lual.util.Scene;
 import javafx.application.Platform;
@@ -37,6 +38,8 @@ public class LoginView extends BaseView {
         if (Configuration.getInstance().getJWT() != null) {
             String jwt = Configuration.getInstance().getJWT();
             getEventBus().post(new ClientTokenLoginMessage());
+        } else {
+            getEventBus().post(new ShowStageEvent());
         }
     }
 
