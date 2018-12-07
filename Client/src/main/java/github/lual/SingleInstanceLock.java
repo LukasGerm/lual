@@ -2,8 +2,7 @@ package github.lual;
 
 import github.lual.util.ResourceLoader;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 public class SingleInstanceLock {
 
@@ -22,10 +21,28 @@ public class SingleInstanceLock {
     }
 
     public synchronized void lock() throws IOException {
+        long ownPid = ProcessHandle.current().pid();
+        long existingPid = -1;
         if (lockFile.exists()) {
+            try (FileReader fileReader = new FileReader(lockFile)) {
+                try (BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+                    String line = bufferedReader.readLine();
+                    if (line != null && line.matches("^[0-9]+$")) {
+                        existingPid = Long.parseLong(line);
+                    }
+                }
+            }
+      }
+
+        if (existingPid > -1 && ProcessHandle.of(existingPid).isPresent() && existingPid != ownPid) {
             throw new IllegalStateException(ResourceLoader.getInstance().getResourceBundle(Configuration.getInstance().getResourceBundleLanguage()).getString("LockfilePresent"));
         }
-        lockFile.createNewFile();
+
+        try (FileWriter fileWriter = new FileWriter(lockFile)) {
+            try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+                bufferedWriter.write(String.valueOf(ownPid));
+            }
+        }
         lockFile.deleteOnExit();
     }
 
