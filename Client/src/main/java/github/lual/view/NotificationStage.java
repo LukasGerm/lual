@@ -40,6 +40,7 @@ public class NotificationStage extends Stage {
         setMinWidth(width);
         setMaxHeight(height);
         setMaxWidth(width);
+        setOnCloseRequest(event -> event.consume());
     }
 
     public void showInBackground() {

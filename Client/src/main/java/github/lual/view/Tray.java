@@ -1,10 +1,10 @@
 package github.lual.view;
 
+import com.google.common.eventbus.EventBus;
 import github.lual.Configuration;
 import github.lual.util.ResourceLoader;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -17,7 +17,7 @@ import static github.lual.Main.WINDOW_WIDTH;
 
 public class Tray {
 
-    public Tray(Stage stage) {
+    public Tray(Stage stage, EventBus eventBus) {
         if (!SystemTray.isSupported()) {
             return;
         }
@@ -35,7 +35,9 @@ public class Tray {
         PopupMenu popupMenu = new PopupMenu();
         MenuItem openAppMenuItem = new MenuItem(bundle.getString("TrayMenuOpenApp"));
         MenuItem closeAppMenuItem = new MenuItem(bundle.getString("TrayMenuCloseApp"));
+        MenuItem logoutMenuItem = new MenuItem(bundle.getString("TrayMenuLogoutApp"));
         popupMenu.add(openAppMenuItem);
+        popupMenu.add(logoutMenuItem);
         popupMenu.add(closeAppMenuItem);
 
         openAppMenuItem.addActionListener(event -> {
@@ -49,7 +51,23 @@ public class Tray {
         });
         closeAppMenuItem.addActionListener(event -> {
             Platform.runLater(() -> {
-                stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+                System.exit(0);
+            });
+        });
+        logoutMenuItem.addActionListener(event -> {
+            try {
+                Configuration.getInstance().setJWT(null);
+                Configuration.getInstance().save();
+            } catch (IOException e) {
+
+            }
+            eventBus.post(ShowComponentEvent.of(LoginView.class));
+            Platform.runLater(() -> {
+                stage.show();
+                stage.setWidth(WINDOW_WIDTH);
+                stage.setHeight(WINDOW_HEIGHT);
+                stage.setIconified(false);
+                stage.toFront();
             });
         });
 

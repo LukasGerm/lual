@@ -67,9 +67,10 @@ public class Configuration {
 
     public Configuration setJWT(String jwt) {
         if (jwt == null || jwt.trim().length() < 1) {
-            return this;
+            properties.remove("jwt");
+        } else {
+            properties.setProperty("jwt", jwt);
         }
-        properties.setProperty("jwt", jwt);
         return this;
     }
 

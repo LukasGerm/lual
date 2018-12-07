@@ -53,10 +53,10 @@ public class Main extends Application {
 
         notificationStage = new NotificationStage();
         notificationStage.showInBackground();
-        new Tray(stage);
 
         final EventBus eventBus = new EventBus();
         eventBus.register(this);
+        new Tray(stage, eventBus);
         final ComponentManager componentManager = new ComponentManager(stage, eventBus);
         final TlsClient client = new TlsClient(config.getHost(), config.getPort());
         final EventBusMessageGateway messageGateway = new EventBusMessageGateway(eventBus, client);
@@ -71,6 +71,7 @@ public class Main extends Application {
                 stage.hide();
             }
         });
+        stage.setOnCloseRequest(event -> event.consume());
 
         URL iconURL = ResourceLoader.getInstance().getResourceURL("icon.png");
         stage.getIcons().add(new javafx.scene.image.Image(iconURL.openStream()));
@@ -87,16 +88,6 @@ public class Main extends Application {
 
         eventBus.post(ShowComponentEvent.of(LoginView.class));
         new HotkeyListener(KEYSTROKE_HOTKEY, eventBus);
-
-        // close-event required to disconnect client and cleanup resources
-        stage.setOnCloseRequest(event -> {
-            try {
-                notificationStage.close();
-                client.close();
-                System.exit(0);
-            } catch (IOException e) {
-            }
-        });
     }
 
     private void loadComponents(EventBus eventBus) {
