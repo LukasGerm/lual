@@ -43,18 +43,25 @@ public class Configuration {
 
     public String getHost() {
         String host = properties.getProperty("host");
-        if (host == null || host.trim().length() < 1) {
-            return "127.0.0.1";
-        }
-        return host;
+        return host == null ? null : host.trim();
     }
 
-    public int getPort() {
+    public Configuration setHost(String host) {
+        properties.setProperty("host", host);
+        return this;
+    }
+
+    public Configuration setPort(int port) {
+        properties.setProperty("port", String.valueOf(port));
+        return this;
+    }
+
+    public Integer getPort() {
         String port = properties.getProperty("port");
-        if (port == null || port.trim().length() < 1 || !port.matches("^[0-9]+$")) {
-            return 8000;
+        if (port == null || port.trim().length() < 1 || !port.trim().matches("^[0-9]+$")) {
+            return null;
         }
-        return Integer.parseInt(port);
+        return Integer.parseInt(port.trim());
     }
 
     public String getJWT() {

@@ -17,6 +17,7 @@ import org.controlsfx.control.Notifications;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class Main extends Application {
@@ -41,6 +42,14 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         this.stage = stage;
         Configuration config = Configuration.getInstance();
+
+        // check configuration
+        if (config.getHost() == null || config.getPort() == null) {
+            if (!ServerSettingsDialog.showDialog()) {
+                System.exit(1);
+            }
+        }
+
         ResourceBundle resourceBundle = ResourceLoader.getInstance().getResourceBundle(config.getResourceBundleLanguage());
 
         // app should be started only once
@@ -48,7 +57,7 @@ public class Main extends Application {
             SingleInstanceLock.getInstance().lock();
         } catch (Exception e) {
             Alerts.exception(e);
-            System.exit(0);
+            System.exit(1);
         }
 
         notificationStage = new NotificationStage();

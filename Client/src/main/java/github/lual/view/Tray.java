@@ -2,6 +2,8 @@ package github.lual.view;
 
 import com.google.common.eventbus.EventBus;
 import github.lual.Configuration;
+import github.lual.ServerSettingsDialog;
+import github.lual.SettingsDialogModel;
 import github.lual.util.ResourceLoader;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -36,8 +38,10 @@ public class Tray {
         MenuItem openAppMenuItem = new MenuItem(bundle.getString("TrayMenuOpenApp"));
         MenuItem closeAppMenuItem = new MenuItem(bundle.getString("TrayMenuCloseApp"));
         MenuItem logoutMenuItem = new MenuItem(bundle.getString("TrayMenuLogoutApp"));
+        MenuItem settingsMenuItem = new MenuItem(bundle.getString("TrayMenuSettings"));
         popupMenu.add(openAppMenuItem);
         popupMenu.add(logoutMenuItem);
+        popupMenu.add(settingsMenuItem);
         popupMenu.add(closeAppMenuItem);
 
         openAppMenuItem.addActionListener(event -> {
@@ -52,6 +56,15 @@ public class Tray {
         closeAppMenuItem.addActionListener(event -> {
             Platform.runLater(() -> {
                 System.exit(0);
+            });
+        });
+        settingsMenuItem.addActionListener(event -> {
+            Platform.runLater(() -> {
+                try {
+                    ServerSettingsDialog.showDialog();
+                } catch (IOException e) {
+                    Alerts.exception(e);
+                }
             });
         });
         logoutMenuItem.addActionListener(event -> {

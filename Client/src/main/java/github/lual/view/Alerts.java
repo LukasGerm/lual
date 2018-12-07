@@ -1,10 +1,11 @@
 package github.lual.view;
 
 import github.lual.Configuration;
+import github.lual.SettingsDialogModel;
 import github.lual.util.ResourceLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -14,7 +15,9 @@ import javafx.stage.Window;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Alerts {
 
@@ -97,7 +100,81 @@ public class Alerts {
         alert.showAndWait();
     }
 
-    private static void setIcon(Alert alert) {
+    public static Optional<SettingsDialogModel> settingsDialog() {
+        ResourceBundle bundle = ResourceLoader.getInstance().getResourceBundle(Configuration.getInstance().getResourceBundleLanguage());
+        Dialog<SettingsDialogModel> dialog = new Dialog<>();
+        dialog.setTitle(bundle.getString("SettingsDialogTitle"));
+        dialog.setHeaderText(bundle.getString("SettingsDialogHeaderText"));
+
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
+        Node okButtonNode = dialog.getDialogPane().lookupButton(ButtonType.OK);
+
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField host = new TextField();
+        host.setPromptText(bundle.getString("SettingsDialogHostname"));
+
+        TextField port = new TextField();
+        port.setPromptText(bundle.getString("SettingsDialogPort"));
+
+        gridPane.add(new Label(bundle.getString("SettingsDialogHostname")), 0, 0);
+        gridPane.add(host, 1, 0);
+        gridPane.add(new Label(bundle.getString("SettingsDialogPort")), 0, 1);
+        gridPane.add(port, 1, 1);
+
+        dialog.getDialogPane().setContent(gridPane);
+
+        AtomicBoolean hostOk = new AtomicBoolean(false);
+        AtomicBoolean portOk = new AtomicBoolean(false);
+
+        Runnable checkRunnable = () -> {
+            boolean enabled = hostOk.get() && portOk.get();
+            okButtonNode.setDisable(!enabled);
+        };
+
+        host.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.trim().length() < 1) {
+                hostOk.set(false);
+            } else {
+                hostOk.set(true);
+            }
+            checkRunnable.run();
+        });
+
+        port.textProperty().addListener((observable, oldValue, newValue) -> {
+           if (newValue == null || newValue.trim().length() < 1 || !newValue.trim().matches("^[0-9]+$")) {
+               portOk.set(false);
+           } else {
+               portOk.set(true);
+           }
+           checkRunnable.run();
+        });
+
+        if (Configuration.getInstance().getHost() != null) {
+            host.setText(Configuration.getInstance().getHost());
+        }
+        if (Configuration.getInstance().getPort() != null) {
+            port.setText(String.valueOf(Configuration.getInstance().getPort()));
+        }
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton != ButtonType.OK) {
+                return null;
+            }
+            SettingsDialogModel model = new SettingsDialogModel();
+            model.setHost(host.getText().trim());
+            model.setPort(Integer.parseInt(port.getText().trim()));
+            return model;
+        });
+
+        setIcon(dialog);
+        return dialog.showAndWait();
+    }
+
+    private static void setIcon(Dialog alert) {
         Window window = alert.getDialogPane().getScene().getWindow();
         if (!(window instanceof Stage)) {
             return;
