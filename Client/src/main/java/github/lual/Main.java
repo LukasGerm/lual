@@ -16,9 +16,10 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.ConnectException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -31,11 +32,16 @@ public class Main extends Application {
     private NotificationStage notificationStage;
     private Stage stage;
 
-    public static void main(String[] args) {
-        String filePath = Thread.currentThread().getContextClassLoader().getResource("server.pfx").getFile();
-        System.setProperty("javax.net.ssl.keyStore", filePath);
+    public static void main(String[] args) throws Exception {
+        File certFile = new File("server.pfx");
+        if (!certFile.exists()) {
+            try (InputStream inputStream = ResourceLoader.getInstance().getResourceURL("server.pfx").openStream()) {
+                Files.copy(inputStream, certFile.toPath());
+            }
+        }
+        System.setProperty("javax.net.ssl.keyStore", certFile.getPath());
         System.setProperty("javax.net.ssl.keyStorePassword", "changeme");
-        System.setProperty("javax.net.ssl.trustStore", filePath);
+        System.setProperty("javax.net.ssl.trustStore", certFile.getPath());
         System.setProperty("javax.net.ssl.trustStorePassword", "changeme");
         Application.launch(args);
     }
