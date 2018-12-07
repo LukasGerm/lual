@@ -3,6 +3,8 @@ package github.lual;
 import com.fazecast.jSerialComm.SerialPort;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.tulskiy.keymaster.common.Provider;
+import github.lual.messages.types.ClientAlarmMessage;
 import github.lual.messages.types.ServerAlarmMessage;
 import github.lual.net.TlsClient;
 import github.lual.util.ComponentManager;
@@ -15,6 +17,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ResourceBundle;
@@ -23,6 +26,7 @@ import java.util.concurrent.Executors;
 
 public class Main extends Application {
 
+    private static final String KEYSTROKE_HOTKEY = "control alt 0";
     private static final int WINDOW_WIDTH = 500;
     private static final int WINDOW_HEIGHT = 500;
 
@@ -67,6 +71,7 @@ public class Main extends Application {
         }
 
         eventBus.post(ShowComponentEvent.of(LoginView.class));
+        registerHotkey(eventBus);
 
         // close-event required to disconnect client and cleanup resources
         stage.setOnCloseRequest(event -> {
@@ -75,6 +80,13 @@ public class Main extends Application {
                 client.close();
             } catch (IOException e) {
             }
+        });
+    }
+
+    private void registerHotkey(EventBus eventBus) {
+        Provider provider = Provider.getCurrentProvider(false);
+        provider.register(KeyStroke.getKeyStroke(KEYSTROKE_HOTKEY), hotKey -> {
+            eventBus.post(new ClientAlarmMessage());
         });
     }
 

@@ -5,6 +5,8 @@ module lual.client {
     requires io.netty.all;
     requires com.google.common;
     requires controlsfx;
+    requires jkeymaster;
+    requires java.desktop;
     requires static lombok;
     opens github.lual to javafx.graphics, com.google.common;
     opens github.lual.util to javafx.graphics, com.google.common;

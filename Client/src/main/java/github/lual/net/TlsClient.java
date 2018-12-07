@@ -96,8 +96,12 @@ public class TlsClient implements Closeable {
      * @throws InterruptedException
      */
     public ChannelFuture sendMessage(String message) throws InterruptedException {
-        ByteBuf buffer = Unpooled.copiedBuffer(message.getBytes(StandardCharsets.UTF_8));
-        return this.channelFuture.channel().writeAndFlush(buffer);
+        if (this.channelFuture != null) {
+            ByteBuf buffer = Unpooled.copiedBuffer(message.getBytes(StandardCharsets.UTF_8));
+            return this.channelFuture.channel().writeAndFlush(buffer);
+        } else {
+            return null;
+        }
     }
 
     /**
