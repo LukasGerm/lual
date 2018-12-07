@@ -2,3 +2,4 @@ Client/*.iml
 Client/.idea
 Client/target
 Client/config.properties
+Client/lual.lock

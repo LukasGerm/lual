@@ -42,6 +42,14 @@ public class Main extends Application {
         this.stage = stage;
         Configuration config = Configuration.getInstance();
         ResourceBundle resourceBundle = ResourceLoader.getInstance().getResourceBundle(config.getResourceBundleLanguage());
+
+        // app should be started only once
+        try {
+            SingleInstanceLock.getInstance().lock();
+        } catch (Exception e) {
+            Alerts.exception(e);
+        }
+
         notificationStage = new NotificationStage();
         notificationStage.showInBackground();
         new Tray(stage);
