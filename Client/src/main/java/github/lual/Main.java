@@ -2,6 +2,7 @@ package github.lual;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import github.lual.messages.types.ClientAlarmMessage;
 import github.lual.messages.types.ServerAlarmMessage;
 import github.lual.net.TlsClient;
 import github.lual.util.ComponentManager;
@@ -104,6 +105,20 @@ public class Main extends Application {
     private void onShowStage(ShowStageEvent event) {
         Platform.runLater(() -> {
             stage.show();
+        });
+    }
+
+    @Subscribe
+    private void onSendingAlarm(ClientAlarmMessage message) {
+        ResourceBundle resourceBundle = ResourceLoader.getInstance().getResourceBundle(Configuration.getInstance().getResourceBundleLanguage());
+        Platform.runLater(() -> {
+            Notifications.create() //
+                    .title(resourceBundle.getString("AlarmSendingTitle")) //
+                    .text(resourceBundle.getString("AlarmSendingText")) //
+                    .owner(notificationStage) //
+                    .position(Pos.BOTTOM_RIGHT) //
+                    .hideAfter(Duration.seconds(15)) //
+                    .showInformation();
         });
     }
 
