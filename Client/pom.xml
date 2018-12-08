@@ -21,6 +21,7 @@
 
         <plugin.spring-boot-maven.version>2.1.0.RELEASE</plugin.spring-boot-maven.version>
         <plugin.maven-compiler.version>3.8.0</plugin.maven-compiler.version>
+        <plugin.owasp-dependency-check.version>4.0.0</plugin.owasp-dependency-check.version>
     </properties>
 
     <dependencies>
@@ -114,6 +115,21 @@
                         <arg>javafx.controls</arg>
                     </compilerArgs>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>${plugin.owasp-dependency-check.version}</version>
+                <configuration>
+                    <failBuildOnCVSS>8</failBuildOnCVSS>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
