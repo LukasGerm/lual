@@ -5,6 +5,7 @@ variables:
 stages:
   - build
   - deploy
+  - owasp
 
 build:
   image: $MAVEN_DOCKER_IMAGE
@@ -33,3 +34,16 @@ deploy:
     paths:
       - ./*.zip
     expire_in: 1 day
+
+owasp:
+  image: $MAVEN_DOCKER_IMAGE
+  stage: owasp
+  script:
+    - pushd Client
+    - mvn -B -Djavafx.platform=win dependency-check:check
+    - popd
+    - mv Client/target/dependency-check-report.html .
+  artifacts:
+    paths:
+      - ./*.html
+    expire_in: 1 hour
