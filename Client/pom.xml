@@ -120,9 +120,6 @@
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
                 <version>${plugin.owasp-dependency-check.version}</version>
-                <configuration>
-                    <failBuildOnCVSS>8</failBuildOnCVSS>
-                </configuration>
                 <executions>
                     <execution>
                         <goals>
