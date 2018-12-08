@@ -7,6 +7,7 @@ import github.lual.messages.types.ServerAlarmMessage;
 import github.lual.net.TlsClient;
 import github.lual.util.ComponentManager;
 import github.lual.util.ResourceLoader;
+import github.lual.util.SoundPlayer;
 import github.lual.view.*;
 import io.netty.channel.AbstractChannel;
 import javafx.application.Application;
@@ -25,12 +26,15 @@ import java.util.ResourceBundle;
 
 public class Main extends Application {
 
+    private static final String ALARM_SOUND = "alarm.mp3";
+    private static final double ALARM_VOLUME = 0.25d;
     private static final String KEYSTROKE_HOTKEY = "control alt 0";
     public static final int WINDOW_WIDTH = 400;
     public static final int WINDOW_HEIGHT = 300;
 
     private NotificationStage notificationStage;
     private Stage stage;
+    private SoundPlayer alarmSoundPlayer;
 
     public static void main(String[] args) throws Exception {
         File certFile = new File("server.pfx");
@@ -70,6 +74,8 @@ public class Main extends Application {
 
         notificationStage = new NotificationStage();
         notificationStage.showInBackground();
+
+        alarmSoundPlayer = new SoundPlayer(ALARM_SOUND, ALARM_VOLUME);
 
         final EventBus eventBus = new EventBus();
         eventBus.register(this);
@@ -156,6 +162,7 @@ public class Main extends Application {
                     .position(Pos.BOTTOM_RIGHT) //
                     .hideAfter(Duration.INDEFINITE) //
                     .showWarning();
+            alarmSoundPlayer.playOnce();
         });
     }
 }
