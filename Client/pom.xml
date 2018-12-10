@@ -145,6 +145,7 @@
                             <headerType>console</headerType>
                             <jar>target/${project.artifactId}-${project.version}.jar</jar>
                             <outfile>target/${project.artifactId}.exe</outfile>
+                            <icon>src/main/resources/icon.ico</icon>
                             <downloadUrl>http://java.com/download</downloadUrl>
                             <classPath>
                                 <mainClass>org.springframework.boot.loader.JarLauncher</mainClass>
@@ -165,7 +166,7 @@
                                 <txtProductVersion>${project.version}</txtProductVersion>
                                 <productName>${project.description}</productName>
                                 <internalName>${project.description}</internalName>
-                                <originalFilename>${project.artifactId}.exe.exe</originalFilename>
+                                <originalFilename>${project.artifactId}.exe</originalFilename>
                             </versionInfo>
                         </configuration>
                     </execution>
