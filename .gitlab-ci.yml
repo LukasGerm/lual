@@ -1,5 +1,6 @@
 variables:
   MAVEN_DOCKER_IMAGE: "maven:3.6.0-jdk-11"
+  NSIS_DOCKER_IMAGE: "oclif/nsis:11.3.0-16"
   JDK_WIN_URL: "https://download.java.net/java/GA/jdk11/13/GPL/openjdk-11.0.1_windows-x64_bin.zip"
 
 stages:
@@ -55,7 +56,7 @@ jdk:
     expire_in: 1 hour
 
 installer:
-  image: tiogt/nsis
+  image: $NSIS_DOCKER_IMAGE
   stage: installer
   only:
     - tags
