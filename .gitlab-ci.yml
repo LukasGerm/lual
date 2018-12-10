@@ -55,7 +55,7 @@ jdk:
     expire_in: 1 hour
 
 installer:
-  image: hp41/nsis
+  image: tiogt/nsis
   stage: installer
   only:
     - tags
