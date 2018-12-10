@@ -8,7 +8,7 @@
 !define COMP_NAME "Github Lual"
 !define WEB_SITE "https://github.com/PreCodeEU/lual"
 !define VERSION "01.00.00.00"
-!define COPYRIGHT "Github Lual  © 2018"
+!define COPYRIGHT "Github Lual  ï¿½ 2018"
 !define DESCRIPTION "Application"
 !define INSTALLER_NAME "lual-client-setup.exe"
 !define MAIN_APP_EXE "lual-client.exe"
@@ -93,7 +93,7 @@ Section -MainProgram
 ${INSTALL_TYPE}
 SetOverwrite ifnewer
 SetOutPath "$INSTDIR"
-File "Client\target\lual-client.exe"
+File "lual-client.exe"
 File /r "jdk"
 SectionEnd
 

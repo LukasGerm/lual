@@ -4,8 +4,9 @@ variables:
 
 stages:
   - build
-  - deploy
   - owasp
+  - jdk
+  - installer
 
 build:
   image: $MAVEN_DOCKER_IMAGE
@@ -16,10 +17,10 @@ build:
     - pushd Client
     - mvn -B -Djavafx.platform=win clean package
     - popd
-    - mv Client/target/*.exe .
+    - mv Client/target/lual-client.exe .
   artifacts:
     paths:
-      - ./*.exe
+      - lual-client.exe
     expire_in: 1 hour
 
 build-release:
@@ -32,27 +33,40 @@ build-release:
     - mvn -B versions:set -DnewVersion=${CI_COMMIT_REF_NAME}
     - mvn -B -Djavafx.platform=win clean package
     - popd
-    - mv Client/target/*.exe .
+    - mv Client/target/lual-client.exe .
   artifacts:
     paths:
-      - ./*.exe
+      - lual-client.exe
     expire_in: 1 hour
 
-deploy:
+jdk:
   image: alpine
-  stage: deploy
+  stage: jdk
   only:
     - tags
   dependencies:
     - build-release
   script:
-    - apk update && apk add ca-certificates && update-ca-certificates && apk add openssl wget unzip zip
+    - apk update && apk add ca-certificates && update-ca-certificates && apk add openssl wget unzip bzip2
     - wget $JDK_WIN_URL && unzip *.zip && rm *.zip && mv jdk* jdk
-    - mkdir lual-client && mv jdk lual-client/jdk && mv ./*.exe lual-client/
-    - zip -r lual-client.zip lual-client
+    - tar -cjf transfer.tar.bz2 jdk/ ./*.exe
   artifacts:
     paths:
-      - ./*.zip
+      - transfer.tar.bz2
+    expire_in: 1 hour
+
+installer:
+  image: hp41/nsis
+  stage: installer
+  only:
+    - tags
+  dependencies:
+    - jdk
+  script:
+    - makensis lual-client-setup.nsi
+  artifacts:
+    paths:
+      - lual-client-setup.exe
     expire_in: 1 day
 
 owasp:
@@ -65,5 +79,5 @@ owasp:
     - mv Client/target/dependency-check-report.html .
   artifacts:
     paths:
-      - ./*.html
+      - dependency-check-report.html
     expire_in: 1 day
