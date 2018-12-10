@@ -4,7 +4,6 @@ variables:
 
 stages:
   - build
-  - owasp
   - jdk
   - installer
 
@@ -63,6 +62,7 @@ installer:
   dependencies:
     - jdk
   script:
+    - tar -xjf transfer.tar.bz2
     - makensis lual-client-setup.nsi
   artifacts:
     paths:
@@ -71,7 +71,8 @@ installer:
 
 owasp:
   image: $MAVEN_DOCKER_IMAGE
-  stage: owasp
+  stage: build
+  when: manual
   script:
     - pushd Client
     - mvn -B -Djavafx.platform=win dependency-check:check
