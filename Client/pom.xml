@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>github.lual</groupId>
     <artifactId>lual-client</artifactId>
@@ -22,6 +23,7 @@
         <plugin.spring-boot-maven.version>2.1.0.RELEASE</plugin.spring-boot-maven.version>
         <plugin.maven-compiler.version>3.8.0</plugin.maven-compiler.version>
         <plugin.owasp-dependency-check.version>4.0.0</plugin.owasp-dependency-check.version>
+        <plugin.launch4j.version>1.7.24</plugin.launch4j.version>
     </properties>
 
     <dependencies>
@@ -125,6 +127,47 @@
                         <goals>
                             <goal>check</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>${plugin.launch4j.version}</version>
+                <executions>
+                    <execution>
+                        <id>l4j-clui</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>console</headerType>
+                            <jar>target/${project.artifactId}-${project.version}.jar</jar>
+                            <outfile>target/${project.artifactId}.exe</outfile>
+                            <downloadUrl>http://java.com/download</downloadUrl>
+                            <classPath>
+                                <mainClass>org.springframework.boot.loader.JarLauncher</mainClass>
+                            </classPath>
+                            <jre>
+                                <path>jdk</path>
+                                <bundledJre64Bit>true</bundledJre64Bit>
+                                <bundledJreAsFallback>false</bundledJreAsFallback>
+                                <jdkPreference>jdkOnly</jdkPreference>
+                                <runtimeBits>64</runtimeBits>
+                            </jre>
+                            <versionInfo>
+                                <fileVersion>1.0.0.0</fileVersion>
+                                <txtFileVersion>${project.version}</txtFileVersion>
+                                <fileDescription>${project.description}</fileDescription>
+                                <copyright>© https://github.com/PreCodeEU/lual</copyright>
+                                <productVersion>1.0.0.0</productVersion>
+                                <txtProductVersion>${project.version}</txtProductVersion>
+                                <productName>${project.description}</productName>
+                                <internalName>${project.description}</internalName>
+                                <originalFilename>${project.artifactId}.exe.exe</originalFilename>
+                            </versionInfo>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

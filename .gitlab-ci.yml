@@ -10,25 +10,45 @@ stages:
 build:
   image: $MAVEN_DOCKER_IMAGE
   stage: build
+  except:
+    - tags
   script:
     - pushd Client
     - mvn -B -Djavafx.platform=win clean package
     - popd
-    - mv Client/target/*.jar .
+    - mv Client/target/*.exe .
   artifacts:
     paths:
-      - ./*.jar
+      - ./*.exe
+    expire_in: 1 hour
+
+build-release:
+  image: $MAVEN_DOCKER_IMAGE
+  stage: build
+  only:
+    - tags
+  script:
+    - pushd Client
+    - mvn -B versions:set -DnewVersion=${CI_COMMIT_REF_NAME}
+    - mvn -B -Djavafx.platform=win clean package
+    - popd
+    - mv Client/target/*.exe .
+  artifacts:
+    paths:
+      - ./*.exe
     expire_in: 1 hour
 
 deploy:
   image: alpine
   stage: deploy
+  only:
+    - tags
   dependencies:
-    - build
+    - build-release
   script:
     - apk update && apk add ca-certificates && update-ca-certificates && apk add openssl wget unzip zip
     - wget $JDK_WIN_URL && unzip *.zip && rm *.zip && mv jdk* jdk
-    - mkdir lual-client && mv jdk lual-client/jdk && mv ./*.jar lual-client/lual-client.jar && cp Client/lual-client.bat lual-client
+    - mkdir lual-client && mv jdk lual-client/jdk && mv ./*.exe lual-client/
     - zip -r lual-client.zip lual-client
   artifacts:
     paths:
@@ -46,4 +66,4 @@ owasp:
   artifacts:
     paths:
       - ./*.html
-    expire_in: 1 hour
+    expire_in: 1 day
