@@ -1,0 +1,14 @@
+services:
+  - docker
+language: java
+java:
+  - 11
+
+script:
+  - pushd Client
+  - mvn -B -Djavafx.platform=win clean package
+  - popd
+  - mv Client/target/lual-client.exe .
+  - wget https://download.java.net/java/GA/jdk11/13/GPL/openjdk-11.0.1_windows-x64_bin.zip && unzip *.zip && rm *.zip && mv jdk* jdk
+  - docker pull oclif/nsis:11.3.0-16
+  - docker run --rm -it oclif/nsis:11.3.0-16 makensis lual-client-setup.nsi
