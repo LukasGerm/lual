@@ -142,7 +142,7 @@
                             <goal>launch4j</goal>
                         </goals>
                         <configuration>
-                            <headerType>console</headerType>
+                            <headerType>gui</headerType>
                             <jar>target/${project.artifactId}-${project.version}.jar</jar>
                             <outfile>target/${project.artifactId}.exe</outfile>
                             <icon>src/main/resources/icon.ico</icon>
