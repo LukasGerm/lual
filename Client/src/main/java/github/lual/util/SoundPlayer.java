@@ -26,6 +26,7 @@ public class SoundPlayer {
     }
 
     public void playOnce() {
+        mediaPlayer.stop();
         mediaPlayer.play();
     }
 }
