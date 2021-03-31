@@ -16,7 +16,7 @@
         <jar.netty.version>4.1.31.Final</jar.netty.version>
         <jar.lombok.version>1.18.4</jar.lombok.version>
         <jar.javafx.version>11.0.1</jar.javafx.version>
-        <jar.guava.version>27.0-jre</jar.guava.version>
+        <jar.guava.version>29.0-jre</jar.guava.version>
         <jar.controlsfx.version>9.0.0</jar.controlsfx.version>
         <jar.jkeymaster.version>1.2</jar.jkeymaster.version>
 
